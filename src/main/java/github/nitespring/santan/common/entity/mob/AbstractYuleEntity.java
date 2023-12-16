@@ -87,7 +87,7 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 		this.setAnimationState(tag.getInt("AnimationId"));
 		this.setCombatState(tag.getInt("CombatStateId"));
 		this.setEntityState(tag.getInt("EntityStateId"));
-		this.setYuleTeam(tag.getInt("BnMTeam"));
+		this.setYuleTeam(tag.getInt("YuleTeam"));
 		if (tag.hasUUID("Owner")) {
 	         this.ownerUUID = tag.getUUID("Owner");
 	      }
@@ -99,7 +99,7 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 		tag.putInt("AnimationId", this.getAnimationState());
 		tag.putInt("CombatStateId", this.getCombatState());
 		tag.putInt("EntityStateId", this.getEntityState());
-		tag.putInt("BnMTeam", this.getYuleTeam());
+		tag.putInt("YuleTeam", this.getYuleTeam());
 		if (this.ownerUUID != null) {
 	    	  tag.putUUID("Owner", this.ownerUUID);
 	      }	
@@ -155,12 +155,12 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 	@Override
      public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
 
-	    if(!this.serializeNBT().contains("BnMTeam")) {
+	    if(!this.serializeNBT().contains("YuleTeam")) {
 	    	   this.setYuleTeam(this.getYuleDefaultTeam());
 	       }
 	    if(this.owner!=null) {
-	    	   if(this.owner.serializeNBT().contains("BnMTeam")) {
-	    		   this.setYuleTeam(this.owner.serializeNBT().getInt("BnMTeam"));
+	    	   if(this.owner.serializeNBT().contains("YuleTeam")) {
+	    		   this.setYuleTeam(this.owner.serializeNBT().getInt("YuleTeam"));
 	    	   }else if(this.owner instanceof Player) {
 	        	   this.setYuleTeam(4);
 	    	   }
@@ -173,10 +173,10 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
      	if(this.getOwner()!=null) {
      		return this.getOwner().isAlliedTo(e);
      	}else {
- 	    	if(this.serializeNBT().contains("Team")) {
- 	    		int teamOwner = this.serializeNBT().getInt("Team");
- 			    	if(e.serializeNBT().contains("Team")) {	
- 				    	 int teamTarget = e.serializeNBT().getInt("Team");
+ 	    	if(this.serializeNBT().contains("YuleTeam")) {
+ 	    		int teamOwner = this.serializeNBT().getInt("YuleTeam");
+ 			    	if(e.serializeNBT().contains("YuleTeam")) {	
+ 				    	 int teamTarget = e.serializeNBT().getInt("YuleTeam");
  				    	 
  					    		return teamOwner == teamTarget ? true : super.isAlliedTo(e);
  			    	}else {
@@ -220,7 +220,7 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 	      }
 	   } 
      
-     public static boolean checkBnMMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219014_, ServerLevelAccessor p_219015_, MobSpawnType p_219016_, BlockPos p_219017_, RandomSource p_219018_) {
+     public static boolean checkYuleMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219014_, ServerLevelAccessor p_219015_, MobSpawnType p_219016_, BlockPos p_219017_, RandomSource p_219018_) {
          return p_219015_.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(p_219015_, p_219017_, p_219018_) && checkYuleMobSpawnRules(p_219014_, p_219015_, p_219016_, p_219017_, p_219018_);
       }
 

@@ -35,11 +35,30 @@ public class EvilSnowmanModel extends GeoModel<EvilSnowman>{
 	public void setCustomAnimations(EvilSnowman entity, long uniqueID, AnimationState<EvilSnowman> customPredicate) {
     	super.setCustomAnimations(entity, uniqueID, customPredicate);
     	CoreGeoBone head = this.getAnimationProcessor().getBone("head_rotation");
+    	CoreGeoBone hat = this.getAnimationProcessor().getBone("hat");
+    	CoreGeoBone antlers = this.getAnimationProcessor().getBone("antlers");
         assert customPredicate != null;
         EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
         head.setRotX(extraData.headPitch() * ((float) Math.PI / 180F));
         head.setRotY(extraData.netHeadYaw() * ((float) Math.PI / 180F));
-        
+        switch(entity.getSnowmanType()) {
+        case 1,4:
+        	hat.setHidden(true);
+        	antlers.setHidden(false);
+        	break;
+        case 2:
+        	hat.setHidden(false);
+        	antlers.setHidden(true);
+        	break;
+        case 3:
+        	hat.setHidden(true);
+        	antlers.setHidden(true);
+        	break;
+        default:
+        	hat.setHidden(false);
+        	antlers.setHidden(false);
+        	break;
+        }
 		
 	}
 

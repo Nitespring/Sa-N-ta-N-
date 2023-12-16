@@ -12,6 +12,6 @@ public class ItemInit {
 			 SaNtaNMod.MODID);
 	
 	public static final RegistryObject<Item> SNOWMAN = ITEMS.register("evil_snowman_spawn_egg", 
-			() -> new ForgeSpawnEggItem(EntityInit.SNOWMAN, 14283506, 8496292, new Item.Properties()));
+			() -> new ForgeSpawnEggItem(EntityInit.SNOWMAN, 14283506, 16737400, new Item.Properties()));
 
 }

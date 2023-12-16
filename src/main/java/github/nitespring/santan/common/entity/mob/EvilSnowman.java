@@ -1,25 +1,43 @@
 package github.nitespring.santan.common.entity.mob;
 
 import java.util.EnumSet;
+import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import github.nitespring.santan.common.entity.util.DamageHitboxEntity;
 import github.nitespring.santan.core.init.EntityInit;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.datafix.fixes.BlockStateStructureTemplateFix;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
-
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -33,6 +51,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 
+	
+	private static final EntityDataAccessor<Integer> SNOWMAN_TYPE = SynchedEntityData.defineId(EvilSnowman.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> LIGHT_STATE = SynchedEntityData.defineId(EvilSnowman.class, EntityDataSerializers.INT);
+	
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 	protected int animationTick = 0;
 	
@@ -114,6 +136,59 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	
 		  }
 	 
+	 public int getSnowmanType() {return this.entityData.get(SNOWMAN_TYPE);}
+	 public void setSnowmanType(int i) {this.entityData.set(SNOWMAN_TYPE, i);}
+
+	 public int getLightState() {return this.entityData.get(LIGHT_STATE);}
+	 public void setLightState(int i) {this.entityData.set(LIGHT_STATE, i);}
+	 
+	 @Override
+	 protected void defineSynchedData() {
+	     super.defineSynchedData();
+	     this.entityData.define(SNOWMAN_TYPE, 0);
+	     this.entityData.define(LIGHT_STATE, 0);   
+	 }
+	 
+	 @Override
+	 public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		this.setAnimationState(tag.getInt("SnowmanType"));
+			
+	 }
+
+	 @Override
+	 public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putInt("SnowmanType", this.getSnowmanType());
+			
+	 }
+	 
+	 @Override
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_,
+			MobSpawnType p_21436_, SpawnGroupData p_21437_, CompoundTag p_21438_) {
+		
+		 int r = new Random().nextInt(255);
+		 
+		 if(r<=80) {
+			 this.setSnowmanType(0);
+		 }else if(r<=110) {
+			 this.setSnowmanType(5);
+		 }else if(r<=170) {
+			 this.setSnowmanType(2);
+		 }else if(r<=220) {
+			 this.setSnowmanType(1);
+		 }else if(r<=250) {
+			 this.setSnowmanType(4);
+		 }else{
+			 this.setSnowmanType(3); 
+		 }
+			 
+		 
+		 
+		 
+		return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
+	}
+	 
 	 @Override
 	 public void aiStep() {
 	      super.aiStep();
@@ -141,6 +216,12 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 		public void tick() {
 			if(this.getAnimationState()!=0) {
 			this.playAnimation();
+			}
+			if(this.getSnowmanType()==4||this.getSnowmanType()==5) {
+			this.setLightState(this.getLightState()+1);	
+			if(this.getLightState()>=13) {
+				this.setLightState(0);
+			}
 			}
 			super.tick();
 		}
@@ -216,7 +297,48 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	 }
 	 
 	 
-	 public class AttackGoal extends Goal{
+	 @Override
+	public boolean hurt(DamageSource source, float f) {
+		 
+		float width = this.getBbWidth() * 0.5f;
+		float height = this.getBbHeight() * 0.5f;
+		for (int i = 0; i < 4; ++i) {
+				
+			Vec3 off = new Vec3(new Random().nextDouble() * width - width / 2, new Random().nextDouble() * height - height / 2,
+					new Random().nextDouble() * width - width / 2);
+		if(this.level() instanceof ServerLevel) {
+			((ServerLevel) this.level()).sendParticles( new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SNOW_BLOCK.defaultBlockState()), 
+					this.position().x+new Random().nextDouble()-0.5, 
+					this.position().y+new Random().nextDouble()*2-0.75, 
+					this.position().z+new Random().nextDouble()-0.5, 
+					6,  
+					off.x, 
+					off.y + 1.0D, 
+					off.z, 0.05D);
+			}
+		}
+		return super.hurt(source, f);
+	}
+	 
+	 
+	 @Nullable
+	   protected SoundEvent getAmbientSound() {
+	      return SoundEvents.SNOW_GOLEM_AMBIENT;
+	   }
+
+	   @Nullable
+	   protected SoundEvent getHurtSound(DamageSource p_29929_) {
+	      return SoundEvents.SNOW_GOLEM_HURT;
+	   }
+
+	   @Nullable
+	   protected SoundEvent getDeathSound() {
+	      return SoundEvents.SNOW_GOLEM_DEATH;
+	   }
+	 
+
+
+	public class AttackGoal extends Goal{
 
 			
 		   private final double speedModifier = 1.1f;
