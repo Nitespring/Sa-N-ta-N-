@@ -11,7 +11,7 @@ public class ItemInit {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
 			 SaNtaNMod.MODID);
 	
-	public static final RegistryObject<Item> HUNTER_MARK = ITEMS.register("evil_snowman_spawn_egg", 
-			() -> new ForgeSpawnEggItem(EntityInit.SNOWMAN, 0, 0, new Item.Properties()));
+	public static final RegistryObject<Item> SNOWMAN = ITEMS.register("evil_snowman_spawn_egg", 
+			() -> new ForgeSpawnEggItem(EntityInit.SNOWMAN, 14283506, 8496292, new Item.Properties()));
 
 }

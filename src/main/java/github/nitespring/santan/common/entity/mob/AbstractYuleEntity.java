@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import github.nitespring.santan.common.entity.util.DamageHitboxEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -189,14 +191,16 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
      }
      
      @Override
- 	public boolean hurt(DamageSource p_21016_, float p_21017_) {
- 		
+ 	public boolean hurt(DamageSource source, float f) {
+    	 Entity e = source.getEntity();
+ 		if(f>0 && (e != null && !(e instanceof DamageHitboxEntity && ((DamageHitboxEntity)e).getOwner() == this))) {
  		 if(hitStunTicks<=0) {
  		 hitStunTicks=5;
  		 }
+ 		 }
  		 
  		 
- 		return super.hurt(p_21016_, p_21017_);
+ 		return super.hurt(source, f);
  	}
      
      public class CopyOwnerTargetGoal extends TargetGoal {
@@ -244,6 +248,10 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
       @Override
 		protected void registerGoals() {
 			
+    	  this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
+    	  this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+    	  this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Villager.class, true));
+    	  
 			this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, LivingEntity.class, 1.0F));
 		      this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 		
