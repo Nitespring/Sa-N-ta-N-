@@ -34,14 +34,15 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	@Override
 	public void registerControllers(ControllerRegistrar data) {
 		data.add(new AnimationController<>(this, "main_controller", 3, this::predicate));
+		data.add(new AnimationController<>(this, "stun_controller", 0, this::hitStunPredicate));
 		}
-	@SuppressWarnings("unused")
+	
 	private <E extends GeoAnimatable> PlayState hitStunPredicate(AnimationState<E> event) {
 		
 		if(hitStunTicks>0) {
-		event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.carrion_crow.hit"));
+		event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.snowman.hit"));
 		}else {
-		event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.carrion_crow.new2"));	
+		event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.snowman.new2"));	
 		}
 		return PlayState.CONTINUE;
 	}
@@ -98,7 +99,21 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 		  }
 	
 	
-	
+	 @Override
+		public void tick() {
+			if(this.getAnimationState()!=0) {
+			this.playAnimation();
+			}
+			super.tick();
+		}
+	 
+	 
+	 protected void playAnimation() {
+		 
+		 
+		 
+	 }
+	 
 	
 	
 }
