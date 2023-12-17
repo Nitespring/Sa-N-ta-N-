@@ -24,6 +24,18 @@ public class CreativeTabsRegistration {
 	            event.accept(ItemInit.SNOWMAN);
 	            
 	        }
+	        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
+	        {
+	            event.accept(ItemInit.CANDY_CLUMP);
+	            event.accept(ItemInit.CANDY_FRAGMENT);
+	            event.accept(ItemInit.SNOWFLAKE);
+	            
+	        }
+	        if (event.getTabKey() == CreativeModeTabs.COMBAT)
+	        {
+	            event.accept(ItemInit.CANDY_SWORD);
+	            
+	        }
 	      
 	    }
 	

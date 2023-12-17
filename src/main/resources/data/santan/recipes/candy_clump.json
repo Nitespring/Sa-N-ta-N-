@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A#A",
+        "#B#",
+        "A#A"
+    ],
+    "key": {
+        "#": {
+            "item": "santan:snowflake"
+        },
+        "A": {
+            "item": "santan:candy_fragment"
+        },
+        "B": {
+            "item": "minecraft:diamond"
+        }
+    },
+    "result": {
+        "item": "santan:candy_clump",
+        "count": 1
+    }
+}

@@ -1,4 +1,8 @@
 {
 "entity.santan.evil_snowman" : "Evil Snowman",
-"item.santan.evil_snowman_spawn_egg" : "Evil Snowman Spawn Egg"
+"item.santan.evil_snowman_spawn_egg" : "Evil Snowman Spawn Egg",
+"item.santan.candy_fragment" : "Candy Fragment",
+"item.santan.candy_clump" : "Candy Clump",
+"item.santan.candy_sword" : "Candybar Greatsword",
+"item.santan.snowflake" : "Snowflake"
 }
