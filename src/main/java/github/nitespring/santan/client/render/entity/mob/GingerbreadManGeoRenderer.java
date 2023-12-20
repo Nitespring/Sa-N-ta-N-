@@ -17,7 +17,7 @@ public class GingerbreadManGeoRenderer extends GeoEntityRenderer<GingerbreadMan>
         super(renderManager, new GingerbreadManModel());
         
         this.shadowRadius = 0.5F;
-       
+        this.addRenderLayer(new GingerbreadManEmissiveLayer<GingerbreadMan>(this));
     }
 	
 	@Override

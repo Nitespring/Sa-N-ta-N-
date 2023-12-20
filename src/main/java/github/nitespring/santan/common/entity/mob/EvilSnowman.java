@@ -296,6 +296,8 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	 }
 	 
 	 
+	
+	 
 	 @Override
 	public boolean hurt(DamageSource source, float f) {
 		 

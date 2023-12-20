@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,6 +50,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 	
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 	protected int animationTick = 0;
+	protected Vec3 aimVec;
 	
 	public GingerbreadMan(EntityType<? extends AbstractYuleEntity> p_33002_, Level p_33003_) {
 		super(p_33002_, p_33003_);
@@ -149,8 +151,8 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 					.add(Attributes.MOVEMENT_SPEED, 0.20D)
 					.add(Attributes.ATTACK_DAMAGE, 8.0D)
 					.add(Attributes.ATTACK_SPEED, 1.2D)
-					.add(Attributes.ATTACK_KNOCKBACK, 0.1D)
-					.add(Attributes.KNOCKBACK_RESISTANCE, 0.4D)
+					.add(Attributes.ATTACK_KNOCKBACK, 0.3D)
+					.add(Attributes.KNOCKBACK_RESISTANCE, 0.6D)
 					.add(Attributes.FOLLOW_RANGE, 35);
 	
 		  }
@@ -203,7 +205,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 			switch(this.getAnimationState()) {
 			//Attack
 			case 21:
-				if(animationTick==7) {
+				if(animationTick==15) {
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -216,14 +218,14 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=10) {
+				if(animationTick>=34) {
 					animationTick=0;
 					setAnimationState(22);
 				}
 				break;
 
 			 case 22:
-					if(animationTick==7) {
+					if(animationTick==15) {
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -236,14 +238,14 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=10) {
+					if(animationTick>=38) {
 						animationTick=0;
 						setAnimationState(0);
 					}
 					break;
 				
 			case 23:
-				if(animationTick==9) {
+				if(animationTick>=15) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -253,35 +255,50 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
-						
-				
-				}
-				if(animationTick>=13) {
-					animationTick=0;
-					setAnimationState(24);
+						if(this.getTarget()!=null) {
+							this.aimVec= this.getTarget().position().add(this.position().scale(-1.0));
+						}else{
+					        this.aimVec=this.getLookAngle();
+						}
+						animationTick=0;
+						setAnimationState(24);
 				}
 				break;
 			case 24:
-				if(animationTick==9) {
+				if(this.aimVec!=null) {
+					this.setDeltaMovement(this.aimVec.normalize().scale(0.4));
+				}else {
+					this.setDeltaMovement(this.getLookAngle().normalize().scale(0.4));
+				}	
+				/*
+				if(this.getTarget()!=null&&this.aimVec!=this.getTarget().position().add(this.position().scale(-1.0))) {
+					Vec3 aim = this.getTarget().position().add(this.position().scale(-1.0)).normalize();
+					Vec3 mov = this.aimVec.normalize();
+					this.aimVec=mov.add((aim.x - mov.x)/(Math.abs(aim.x - mov.x)) * 0.2D, (aim.y - mov.y)/(Math.abs(aim.y - mov.y)) * 0.2D, (aim.z - mov.z)/(Math.abs(aim.z - mov.z)) * 0.2D);
+				}
+				*/
+				//if(this.getTarget()!=null) {this.getLookControl().setLookAt(this.getTarget(), 80.0F, 80.0F);}
+				
+				if((animationTick-5)%10==0) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((2.0f)*this.getLookAngle().x,
 											0.25,
 											(2.0f)*this.getLookAngle().z), 
-						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
+						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)-1, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
 						
 				
 				}
-				if(animationTick>=13) {
+				if(animationTick>=57) {
 					animationTick=0;
 					setAnimationState(0);
 				}
 				break;
 			case 25:
-				if(animationTick==9) {
+				if(animationTick==10) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -294,7 +311,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=13) {
+				if(animationTick>=18) {
 					animationTick=0;
 					setAnimationState(0);
 				}
@@ -310,16 +327,16 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 		 
 		float width = this.getBbWidth() * 0.5f;
 		float height = this.getBbHeight() * 0.5f;
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 6; ++i) {
 				
 			Vec3 off = new Vec3(new Random().nextDouble() * width - width / 2, new Random().nextDouble() * height - height / 2,
 					new Random().nextDouble() * width - width / 2);
 		if(this.level() instanceof ServerLevel) {
-			((ServerLevel) this.level()).sendParticles( new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SNOW_BLOCK.defaultBlockState()), 
+			((ServerLevel) this.level()).sendParticles( new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BROWN_CONCRETE.defaultBlockState()), 
 					this.position().x+new Random().nextDouble()-0.5, 
 					this.position().y+new Random().nextDouble()*2-0.75, 
 					this.position().z+new Random().nextDouble()-0.5, 
-					6,  
+					7,  
 					off.x, 
 					off.y + 1.0D, 
 					off.z, 0.05D);
@@ -345,6 +362,15 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 	   }
 	 
 
+	   @Override
+	protected void tickDeath() {
+		   ++this.deathTime;
+		      if (this.deathTime >= 40 && !this.level().isClientSide() && !this.isRemoved()) {
+		         this.level().broadcastEntityEvent(this, (byte)60);
+		         this.remove(Entity.RemovalReason.KILLED);
+		      }
+	}
+	   
 
 	public class AttackGoal extends Goal{
 
@@ -456,6 +482,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 
 			  this.doMovement(target, reach);
 			  this.checkForCloseRangeAttack(distance, reach);
+			  if(this.mob.getRandom().nextInt(4096)>=4048) {this.mob.setAnimationState(23);}
 			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0); 
 			
 		}
@@ -514,14 +541,14 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 		   protected void checkForCloseRangeAttack(double distance, double reach){
 			   if (distance <= reach && this.ticksUntilNextAttack <= 0) {
 				    int r = this.mob.getRandom().nextInt(2048);
-					    if(r<=400) {
+					    if(r<=800) {
 					    
 					    	this.mob.setAnimationState(21);
 					    	
-					    }else if(r<=800){
+					    }else if(r<=1000){
 					    	
 					    	this.mob.setAnimationState(23);
-					    }else if(r<=1200){
+					    }else if(r<=1800){
 					    	
 					    	this.mob.setAnimationState(25);
 					    }

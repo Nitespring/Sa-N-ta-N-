@@ -37,8 +37,8 @@ public class GingerbreadManModel extends GeoModel<GingerbreadMan>{
     	CoreGeoBone head = this.getAnimationProcessor().getBone("head_rotation");
         assert customPredicate != null;
         EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(extraData.headPitch() * ((float) (0.25 * Math.PI / 180F)));
-        head.setRotY(extraData.netHeadYaw() * ((float) (0.25 * Math.PI / 180F)));
+        head.setRotX(extraData.headPitch() * ((float) (0.5 * Math.PI / 180F)));
+        head.setRotY(extraData.netHeadYaw() * ((float) (0.2 * Math.PI / 180F)));
        
 		
 	}

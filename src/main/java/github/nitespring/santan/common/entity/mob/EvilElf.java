@@ -149,11 +149,11 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 	 public static  AttributeSupplier.Builder setCustomAttributes(){
 			return Monster.createMonsterAttributes()
 					.add(Attributes.MAX_HEALTH, 20.0D)
-					.add(Attributes.MOVEMENT_SPEED, 0.30D)
+					.add(Attributes.MOVEMENT_SPEED, 0.32D)
 					.add(Attributes.ATTACK_DAMAGE, 4.0D)
 					.add(Attributes.ATTACK_SPEED, 1.2D)
 					.add(Attributes.ATTACK_KNOCKBACK, 0.1D)
-					.add(Attributes.KNOCKBACK_RESISTANCE, 0.4D)
+					.add(Attributes.KNOCKBACK_RESISTANCE, 0.2D)
 					.add(Attributes.FOLLOW_RANGE, 35);
 	
 		  }
@@ -234,7 +234,12 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 			switch(this.getAnimationState()) {
 			//Attack
 			case 21:
-				if(animationTick==7) {
+				
+				
+				if(animationTick==3) {
+					this.setDeltaMovement(this.getLookAngle().normalize().scale(0.4).add(0, 0.5, 0));
+				}
+				if(animationTick==10) {
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -247,14 +252,18 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=10) {
+				if(animationTick>=16) {
 					animationTick=0;
 					setAnimationState(0);
 				}
 				break;
 
 			 case 22:
-					if(animationTick==7) {
+				 	if(animationTick==5) {
+						this.setDeltaMovement(this.getLookAngle().normalize().scale(0.4).add(0, 0.5, 0));
+					}
+				 
+					if(animationTick>=7) {
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -266,35 +275,34 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							this.level().addFreshEntity(h);
 							
 					
-					}
-					if(animationTick>=10) {
 						animationTick=0;
 						setAnimationState(23);
 					}
 					break;
 				
 			case 23:
-				if(animationTick==9) {
+				this.setDeltaMovement(new Vec3(this.getLookAngle().normalize().x,0,this.getLookAngle().normalize().z).scale(0.1));
+				if(animationTick==3||animationTick==11) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((2.0f)*this.getLookAngle().x,
 											0.25,
 											(2.0f)*this.getLookAngle().z), 
-						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
+						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
 						
 				
 				}
-				if(animationTick>=13) {
+				if(animationTick>=16) {
 					animationTick=0;
 					setAnimationState(24);
 				}
 				break;
 			
 			 case 24:
-					if(animationTick==9) {
+					if(animationTick==5) {
 				
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -307,14 +315,14 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=13) {
+					if(animationTick>=14) {
 						animationTick=0;
 						setAnimationState(0);
 					}
 					break;
 				
 				case 25:
-					if(animationTick==9) {
+					if(animationTick==6) {
 				
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -327,14 +335,14 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=13) {
+					if(animationTick>=11) {
 						animationTick=0;
 						setAnimationState(26);
 					}
 					break;
 				
 				case 26:
-					if(animationTick==9) {
+					if(animationTick==7) {
 				
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -347,7 +355,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=13) {
+					if(animationTick>=15) {
 						animationTick=0;
 						setAnimationState(0);
 					}
@@ -368,11 +376,11 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 			Vec3 off = new Vec3(new Random().nextDouble() * width - width / 2, new Random().nextDouble() * height - height / 2,
 					new Random().nextDouble() * width - width / 2);
 		if(this.level() instanceof ServerLevel) {
-			((ServerLevel) this.level()).sendParticles( new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SNOW_BLOCK.defaultBlockState()), 
+			((ServerLevel) this.level()).sendParticles( new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()), 
 					this.position().x+new Random().nextDouble()-0.5, 
-					this.position().y+new Random().nextDouble()*2-0.75, 
+					this.position().y+new Random().nextDouble()*1.2-0.4, 
 					this.position().z+new Random().nextDouble()-0.5, 
-					6,  
+					4,  
 					off.x, 
 					off.y + 1.0D, 
 					off.z, 0.05D);
@@ -402,7 +410,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 	public class AttackGoal extends Goal{
 
 			
-		   private final double speedModifier = 1.0f;
+		   private final double speedModifier = 1.2f;
 		   private final boolean followingTargetEvenIfNotSeen = true;
 		   protected final EvilElf mob;
 		   private Path path;
@@ -484,7 +492,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 		      this.mob.getNavigation().moveTo(this.path, this.speedModifier);
 		      this.mob.setAggressive(true);
 		      this.ticksUntilNextPathRecalculation = 0;
-		      this.ticksUntilNextAttack = 10;
+		      this.ticksUntilNextAttack = 7;
 
 		      this.mob.setAnimationState(0);
 		   }
@@ -567,15 +575,15 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 		   protected void checkForCloseRangeAttack(double distance, double reach){
 			   if (distance <= reach && this.ticksUntilNextAttack <= 0) {
 				    int r = this.mob.getRandom().nextInt(2048);
-					    if(r<=400) {
+					    if(r<=600) {
 					    
 					    	this.mob.setAnimationState(21);
 					    	
-					    }else if(r<=800){
+					    }else if(r<=1200){
 					    	
 					    	this.mob.setAnimationState(22);
 					    	
-					    }else if(r<=1200){
+					    }else if(r<=1800){
 					    	
 					    	this.mob.setAnimationState(25);
 					    	
@@ -595,7 +603,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 				
 		
 		  protected double getAttackReachSqr(LivingEntity p_179512_1_) {
-		      return (double)(this.mob.getBbWidth() * 3.0F * this.mob.getBbWidth() * 2.0F + p_179512_1_.getBbWidth());
+		      return (double)(this.mob.getBbWidth() * 3.0F * this.mob.getBbWidth() * 3.0F + 2*p_179512_1_.getBbWidth());
 		   }
 
 	}

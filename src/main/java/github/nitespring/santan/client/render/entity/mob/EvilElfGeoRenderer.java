@@ -18,6 +18,7 @@ public class EvilElfGeoRenderer extends GeoEntityRenderer<EvilElf>{
         
         this.shadowRadius = 0.5F;
         this.addRenderLayer(new EvilElfItemLayer(this));
+        this.addRenderLayer(new EvilElfEmissiveLayer<EvilElf>(this));
           
     }
 	

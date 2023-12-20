@@ -672,7 +672,7 @@
 			}
 		},
 		"animation.elf.attack2_spin_end": {
-			"animation_length": 0.54167,
+			"animation_length": 1.04167,
 			"bones": {
 				"body": {
 					"rotation": {
