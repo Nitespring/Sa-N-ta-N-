@@ -13,11 +13,20 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 @Mod.EventBusSubscriber(modid = SaNtaNMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntitySpawnRegistration {
 	
+	@SuppressWarnings("deprecation")
 	@SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             
             SpawnPlacements.register(EntityInit.SNOWMAN.get(), 
+            		SpawnPlacements.Type.ON_GROUND, 
+            		Types.MOTION_BLOCKING_NO_LEAVES, 
+            		AbstractYuleEntity::checkYuleMonsterSpawnRules);
+            SpawnPlacements.register(EntityInit.GINGERBREAD.get(), 
+            		SpawnPlacements.Type.ON_GROUND, 
+            		Types.MOTION_BLOCKING_NO_LEAVES, 
+            		AbstractYuleEntity::checkYuleMonsterSpawnRules);
+            SpawnPlacements.register(EntityInit.ELF.get(), 
             		SpawnPlacements.Type.ON_GROUND, 
             		Types.MOTION_BLOCKING_NO_LEAVES, 
             		AbstractYuleEntity::checkYuleMonsterSpawnRules);

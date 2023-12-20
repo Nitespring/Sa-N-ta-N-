@@ -1,0 +1,28 @@
+{
+    "parent": "item/generated",
+	"textures": {
+    		"layer0": "santan:item/candybar"
+    		},
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 0, -90, 55 ],
+            "translation": [ 0, 8.8, -0.6 ],
+            "scale": [ 1.70, 1.70, 0.85 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 0, 90, -55 ],
+            "translation": [ 0, 4.0, 0.5 ],
+            "scale": [ 1.70, 1.70, 0.85 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, -90, 35 ],
+            "translation": [ 0, 4.0, 0.5 ],
+            "scale": [ 1.0, 1.0, 0.45 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 90, -35 ],
+            "translation": [ 0, 4.0, 0.5 ],
+            "scale": [ 1.0, 1.0, 0.45 ]
+        }
+    }
+}

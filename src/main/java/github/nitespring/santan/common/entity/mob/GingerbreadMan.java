@@ -11,9 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -48,16 +45,12 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
-public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
-
-	
-	private static final EntityDataAccessor<Integer> SNOWMAN_TYPE = SynchedEntityData.defineId(EvilSnowman.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> LIGHT_STATE = SynchedEntityData.defineId(EvilSnowman.class, EntityDataSerializers.INT);
+public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 	
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 	protected int animationTick = 0;
 	
-	public EvilSnowman(EntityType<? extends AbstractYuleEntity> p_33002_, Level p_33003_) {
+	public GingerbreadMan(EntityType<? extends AbstractYuleEntity> p_33002_, Level p_33003_) {
 		super(p_33002_, p_33003_);
 		this.noCulling = true;
 	}
@@ -72,14 +65,34 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	public void registerControllers(ControllerRegistrar data) {
 		data.add(new AnimationController<>(this, "main_controller", 4, this::predicate));
 		data.add(new AnimationController<>(this, "stun_controller", 2, this::hitStunPredicate));
+		data.add(new AnimationController<>(this, "rotation_controller", 0, this::rotationPredicate));
 		}
+	
+	private <E extends GeoAnimatable> PlayState rotationPredicate(AnimationState<E> event) {
+		int animState = this.getAnimationState();
+		
+			switch(animState) {
+			case 23:
+				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.attack3_rotation"));
+				break;
+			case 24:
+				event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.gingerbread_man.attack3_continue_rotation"));
+				break;
+			default:
+				event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.gingerbread_man.null"));
+				break;
+			}
+		
+		
+        return PlayState.CONTINUE;
+	}
 	
 	private <E extends GeoAnimatable> PlayState hitStunPredicate(AnimationState<E> event) {
 		
 		if(hitStunTicks>0) {
-		event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.snowman.hit"));
+		event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.hit"));
 		}else {
-		event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.snowman.new2"));	
+		event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.gingerbread_man.null"));	
 		}
 		return PlayState.CONTINUE;
 	}
@@ -87,23 +100,30 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	private <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
 		int animState = this.getAnimationState();
 		if(this.isDeadOrDying()) {
-			event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.snowman.death"));
+			event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.death"));
 		}else {
 			switch(animState) {
 			case 21:
-				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.snowman.attack"));
+				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.attack"));
 				break;
 			case 22:
-				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.snowman.attack2"));
+				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.attack2"));
 				break;
 			case 23:
-				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.snowman.attack3"));
+				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.attack3"));
 				break;
+			case 24:
+				event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.gingerbread_man.attack3_continue"));
+				break;
+			case 25:
+				event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.gingerbread_man.attack4"));
+				break;
+
 			default:
 				 if(!(event.getLimbSwingAmount() > -0.06F && event.getLimbSwingAmount() < 0.06F)){
-					 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.snowman.walk"));	 
+					 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.gingerbread_man.walk"));	 
 					 }else {
-					 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.snowman.idle"));
+					 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.gingerbread_man.idle"));
 				 }
 				break;
 			}
@@ -115,7 +135,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	@Override
 	protected void registerGoals() {
 		
-		this.goalSelector.addGoal(1, new EvilSnowman.AttackGoal(this));
+		this.goalSelector.addGoal(1, new GingerbreadMan.AttackGoal(this));
 		
 	
 
@@ -125,9 +145,9 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 
 	 public static  AttributeSupplier.Builder setCustomAttributes(){
 			return Monster.createMonsterAttributes()
-					.add(Attributes.MAX_HEALTH, 30.0D)
+					.add(Attributes.MAX_HEALTH, 50.0D)
 					.add(Attributes.MOVEMENT_SPEED, 0.20D)
-					.add(Attributes.ATTACK_DAMAGE, 4.0D)
+					.add(Attributes.ATTACK_DAMAGE, 8.0D)
 					.add(Attributes.ATTACK_SPEED, 1.2D)
 					.add(Attributes.ATTACK_KNOCKBACK, 0.1D)
 					.add(Attributes.KNOCKBACK_RESISTANCE, 0.4D)
@@ -135,55 +155,12 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	
 		  }
 	 
-	 public int getSnowmanType() {return this.entityData.get(SNOWMAN_TYPE);}
-	 public void setSnowmanType(int i) {this.entityData.set(SNOWMAN_TYPE, i);}
-
-	 public int getLightState() {return this.entityData.get(LIGHT_STATE);}
-	 public void setLightState(int i) {this.entityData.set(LIGHT_STATE, i);}
-	 
-	 @Override
-	 protected void defineSynchedData() {
-	     super.defineSynchedData();
-	     this.entityData.define(SNOWMAN_TYPE, 0);
-	     this.entityData.define(LIGHT_STATE, 0);   
-	 }
-	 
-	 @Override
-	 public void readAdditionalSaveData(CompoundTag tag) {
-		super.readAdditionalSaveData(tag);
-		this.setSnowmanType(tag.getInt("SnowmanType")); 
-			
-	 }
-
-	 @Override
-	 public void addAdditionalSaveData(CompoundTag tag) {
-		super.addAdditionalSaveData(tag);
-		tag.putInt("SnowmanType", this.getSnowmanType());
-			
-	 }
 	 
 	 @Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_,
 			MobSpawnType p_21436_, SpawnGroupData p_21437_, CompoundTag p_21438_) {
 		
-		 int r = new Random().nextInt(255);
-		 
-		 if(r<=80) {
-			 this.setSnowmanType(0);
-		 }else if(r<=110) {
-			 this.setSnowmanType(5);
-		 }else if(r<=170) {
-			 this.setSnowmanType(2);
-		 }else if(r<=220) {
-			 this.setSnowmanType(1);
-		 }else if(r<=250) {
-			 this.setSnowmanType(4);
-		 }else{
-			 this.setSnowmanType(3); 
-		 }
-			 
-		 
-		 
+		
 		 
 		return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
 	}
@@ -215,12 +192,6 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 		public void tick() {
 			if(this.getAnimationState()!=0) {
 			this.playAnimation();
-			}
-			if(this.getSnowmanType()==4||this.getSnowmanType()==5) {
-			this.setLightState(this.getLightState()+1);	
-			if(this.getLightState()>=13) {
-				this.setLightState(0);
-			}
 			}
 			super.tick();
 		}
@@ -267,11 +238,49 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 					}
 					if(animationTick>=10) {
 						animationTick=0;
-						setAnimationState(23);
+						setAnimationState(0);
 					}
 					break;
 				
 			case 23:
+				if(animationTick==9) {
+			
+						
+						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
+						this.position().add((2.0f)*this.getLookAngle().x,
+											0.25,
+											(2.0f)*this.getLookAngle().z), 
+						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
+						h.setOwner(this);
+						this.level().addFreshEntity(h);
+						
+				
+				}
+				if(animationTick>=13) {
+					animationTick=0;
+					setAnimationState(24);
+				}
+				break;
+			case 24:
+				if(animationTick==9) {
+			
+						
+						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
+						this.position().add((2.0f)*this.getLookAngle().x,
+											0.25,
+											(2.0f)*this.getLookAngle().z), 
+						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
+						h.setOwner(this);
+						this.level().addFreshEntity(h);
+						
+				
+				}
+				if(animationTick>=13) {
+					animationTick=0;
+					setAnimationState(0);
+				}
+				break;
+			case 25:
 				if(animationTick==9) {
 			
 						
@@ -322,17 +331,17 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	 
 	 @Nullable
 	   protected SoundEvent getAmbientSound() {
-	      return SoundEvents.SNOW_GOLEM_AMBIENT;
+	      return SoundEvents.ZOMBIE_AMBIENT;
 	   }
 
 	   @Nullable
 	   protected SoundEvent getHurtSound(DamageSource p_29929_) {
-	      return SoundEvents.SNOW_GOLEM_HURT;
+	      return SoundEvents.ZOMBIE_HURT;
 	   }
 
 	   @Nullable
 	   protected SoundEvent getDeathSound() {
-	      return SoundEvents.SNOW_GOLEM_DEATH;
+	      return SoundEvents.ZOMBIE_DEATH;
 	   }
 	 
 
@@ -342,7 +351,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 			
 		   private final double speedModifier = 1.1f;
 		   private final boolean followingTargetEvenIfNotSeen = true;
-		   protected final EvilSnowman mob;
+		   protected final GingerbreadMan mob;
 		   private Path path;
 		   private double pathedTargetX;
 		   private double pathedTargetY;
@@ -356,7 +365,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 
 		
 		
-		  public AttackGoal(EvilSnowman entityIn) {
+		  public AttackGoal(GingerbreadMan entityIn) {
 		      this.mob = entityIn;
 		      this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 		   }
@@ -505,14 +514,16 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 		   protected void checkForCloseRangeAttack(double distance, double reach){
 			   if (distance <= reach && this.ticksUntilNextAttack <= 0) {
 				    int r = this.mob.getRandom().nextInt(2048);
-					    if(r<=500) {
+					    if(r<=400) {
 					    
 					    	this.mob.setAnimationState(21);
 					    	
-					    }else if(r<=1000){
+					    }else if(r<=800){
 					    	
 					    	this.mob.setAnimationState(23);
+					    }else if(r<=1200){
 					    	
+					    	this.mob.setAnimationState(25);
 					    }
 				    } 
 			   }

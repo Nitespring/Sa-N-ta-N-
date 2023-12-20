@@ -22,6 +22,8 @@ public class CreativeTabsRegistration {
 	        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS)
 	        {
 	            event.accept(ItemInit.SNOWMAN);
+	            event.accept(ItemInit.GINGERBREAD);
+	            event.accept(ItemInit.ELF);
 	            
 	        }
 	        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
