@@ -5,6 +5,6 @@
     "type": "santan:elf",
     "weight": 100,
     "minCount": 2,
-    "maxCount": 3
+    "maxCount": 5
   }
 }

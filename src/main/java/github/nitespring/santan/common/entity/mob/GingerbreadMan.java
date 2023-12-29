@@ -209,9 +209,9 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-						this.position().add((2.0f)*this.getLookAngle().x,
+						this.position().add((1.5f)*this.getLookAngle().x,
 											0.25,
-											(2.0f)*this.getLookAngle().z), 
+											(1.5f)*this.getLookAngle().z), 
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -229,9 +229,9 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-							this.position().add((2.0f)*this.getLookAngle().x,
+							this.position().add((1.5f)*this.getLookAngle().x,
 												0.25,
-												(2.0f)*this.getLookAngle().z), 
+												(1.5f)*this.getLookAngle().z), 
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -249,9 +249,9 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-						this.position().add((2.0f)*this.getLookAngle().x,
+						this.position().add((1.5f)*this.getLookAngle().x,
 											0.25,
-											(2.0f)*this.getLookAngle().z), 
+											(1.5f)*this.getLookAngle().z), 
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -283,10 +283,10 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-						this.position().add((2.0f)*this.getLookAngle().x,
+						this.position().add((0.25f)*this.getLookAngle().x,
 											0.25,
-											(2.0f)*this.getLookAngle().z), 
-						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)-1, 5);
+											(0.25f)*this.getLookAngle().z), 
+						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)-4, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
 						
@@ -302,9 +302,9 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-						this.position().add((2.0f)*this.getLookAngle().x,
+						this.position().add((1.5f)*this.getLookAngle().x,
 											0.25,
-											(2.0f)*this.getLookAngle().z), 
+											(1.5f)*this.getLookAngle().z), 
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);

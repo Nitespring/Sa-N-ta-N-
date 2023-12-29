@@ -5,19 +5,19 @@
       "type": "santan:elf",
       "weight": 100,
       "minCount": 2,
-      "maxCount": 3
+      "maxCount": 6
     },
     {
       "type": "santan:evil_snowman",
       "weight": 100,
       "minCount": 1,
-      "maxCount": 3
+      "maxCount": 4
     },
     {
       "type": "santan:gingerbread_man",
       "weight": 100,
       "minCount": 1,
-      "maxCount": 2
+      "maxCount": 3
     }
   ]
 }

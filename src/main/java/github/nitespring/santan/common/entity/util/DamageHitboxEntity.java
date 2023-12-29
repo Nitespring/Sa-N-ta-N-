@@ -97,7 +97,7 @@ public class DamageHitboxEntity extends Entity{
 			
 			this.remove(RemovalReason.DISCARDED);
 		}
-		for(LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.5D, 0.5D, 1.5D))) {
+		for(LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.75D, 0.5D, 0.75D))) {
             if(this.getOwner()==null || !livingentity.isAlliedTo(this.getOwner())) {
             	if(!hitEntities.contains(livingentity)) {
          	    this.dealDamageTo(livingentity);

@@ -236,9 +236,9 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-						this.position().add((2.0f)*this.getLookAngle().x,
+						this.position().add((1.0f)*this.getLookAngle().x,
 											0.25,
-											(2.0f)*this.getLookAngle().z), 
+											(1.0f)*this.getLookAngle().z), 
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -256,9 +256,9 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-							this.position().add((2.0f)*this.getLookAngle().x,
+							this.position().add((1.0f)*this.getLookAngle().x,
 												0.25,
-												(2.0f)*this.getLookAngle().z), 
+												(1.0f)*this.getLookAngle().z), 
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -276,9 +276,9 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
-						this.position().add((2.0f)*this.getLookAngle().x,
+						this.position().add((1.0f)*this.getLookAngle().x,
 											0.25,
-											(2.0f)*this.getLookAngle().z), 
+											(1.0f)*this.getLookAngle().z), 
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
