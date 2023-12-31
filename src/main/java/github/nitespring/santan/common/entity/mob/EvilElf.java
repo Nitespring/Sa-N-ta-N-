@@ -196,32 +196,12 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 		return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
 	}
 	 
-	 @Override
-	 public void aiStep() {
-	      super.aiStep();
 
-	         if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
-	            return;
-	         }
-
-	         BlockState blockstate = Blocks.SNOW.defaultBlockState();
-
-	         for(int i = 0; i < 4; ++i) {
-	            int j = Mth.floor(this.getX() + (double)((float)(i % 2 * 2 - 1) * 0.25F));
-	            int k = Mth.floor(this.getY());
-	            int l = Mth.floor(this.getZ() + (double)((float)(i / 2 % 2 * 2 - 1) * 0.25F));
-	            BlockPos blockpos = new BlockPos(j, k, l);
-	            if (this.level().isEmptyBlock(blockpos) && blockstate.canSurvive(this.level(), blockpos)) {
-	               this.level().setBlockAndUpdate(blockpos, blockstate);
-	               this.level().gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(this, blockstate));
-	            }
-	         }
-	      }
-
+	
 	
 	 @Override
 		public void tick() {
-			if(this.getAnimationState()!=0) {
+			if(this.getAnimationState()!=0&&!this.isDeadOrDying()) {
 			this.playAnimation();
 			}
 			super.tick();

@@ -213,7 +213,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	
 	 @Override
 		public void tick() {
-			if(this.getAnimationState()!=0) {
+			if(this.getAnimationState()!=0&&!this.isDeadOrDying()) {
 			this.playAnimation();
 			}
 			if(this.getSnowmanType()==4||this.getSnowmanType()==5) {
