@@ -17,7 +17,8 @@
         }
     },
     "result": {
-        "item": "santan:candy_clump",
+        "id": "santan:candy_clump",
         "count": 1
-    }
+    },
+    "group": "santan:candy_clump"
 }

@@ -2,14 +2,13 @@ package github.nitespring.santan;
 
 import github.nitespring.santan.core.init.EntityInit;
 import github.nitespring.santan.core.init.ItemInit;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import software.bernie.geckolib.GeckoLib;
 
 
@@ -21,35 +20,15 @@ public class SaNtaNMod
     //private static final Logger LOGGER = LogUtils.getLogger();
     
     
-    public SaNtaNMod()
+    public SaNtaNMod(IEventBus bus, ModContainer modContainer)
     {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        bus.addListener(this::setup);
-        GeckoLib.initialize();
+
+        //bus.addListener(this::setup);
         ItemInit.ITEMS.register(bus);
         EntityInit.ENTITIES.register(bus);
 
-        MinecraftForge.EVENT_BUS.register(this);
-
-      
-        //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-    }
-
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        
     }
 
 
-
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
-           
-        }
-    }
 }

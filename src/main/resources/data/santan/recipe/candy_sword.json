@@ -14,7 +14,8 @@
         }
     },
     "result": {
-        "item": "santan:candy_sword",
+        "id": "santan:candy_sword",
         "count": 1
-    }
+    },
+    "id": "santan:candy_sword"
 }

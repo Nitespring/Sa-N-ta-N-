@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="santan"
+version="1.0"
+displayName="Sa(N)ta(N)Craft"
+authors="Nitespring"
+
+description='''Oh Oh Oh'''
+
+[[dependencies.santan]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.0.143,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.santan]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.santan]]
+    modId="geckolib"
+    mandatory=true
+    versionRange="[4.5.8,)"
+    ordering="NONE"
+    side="BOTH"
