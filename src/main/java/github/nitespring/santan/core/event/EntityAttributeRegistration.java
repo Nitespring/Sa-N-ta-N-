@@ -5,12 +5,12 @@ import github.nitespring.santan.common.entity.mob.EvilElf;
 import github.nitespring.santan.common.entity.mob.EvilSnowman;
 import github.nitespring.santan.common.entity.mob.GingerbreadMan;
 import github.nitespring.santan.core.init.EntityInit;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
-@Mod.EventBusSubscriber(modid = SaNtaNMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+
+@EventBusSubscriber(modid = SaNtaNMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EntityAttributeRegistration {
 	
 	@SubscribeEvent

@@ -6,13 +6,13 @@ import github.nitespring.santan.client.render.entity.mob.EvilSnowmanGeoRenderer;
 import github.nitespring.santan.client.render.entity.mob.GingerbreadManGeoRenderer;
 import github.nitespring.santan.client.render.entity.projectile.InvisibleProjectileRenderer;
 import github.nitespring.santan.core.init.EntityInit;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = SaNtaNMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = SaNtaNMod.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientListener {
 	
 	 @SubscribeEvent

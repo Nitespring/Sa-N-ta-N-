@@ -69,15 +69,16 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 	 
 	public int getYuleTeam() {return this.entityData.get(TEAM);}
 	public void setYuleTeam(int anim) {this.entityData.set(TEAM, anim);}
-	
+
 	@Override
-	 protected void defineSynchedData() {
-	      super.defineSynchedData();
-	      this.entityData.define(ANIMATION_STATE, 0);
-	      this.entityData.define(COMBAT_STATE, 0);   
-	      this.entityData.define(ENTITY_STATE, 0);
-	      this.entityData.define(TEAM, getYuleDefaultTeam());
-	   }
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ANIMATION_STATE, 0);
+		builder.define(COMBAT_STATE, 0);
+		builder.define(ENTITY_STATE, 0);
+		builder.define(TEAM, getYuleDefaultTeam());
+	}
+
 	
 	protected abstract int getYuleDefaultTeam();
 
@@ -152,41 +153,35 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
      		}
      
      @SuppressWarnings("deprecation")
-	@Override
-     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
-
-	    if(!this.serializeNBT().contains("YuleTeam")) {
-	    	   this.setYuleTeam(this.getYuleDefaultTeam());
-	       }
-	    if(this.owner!=null) {
-	    	   if(this.owner.serializeNBT().contains("YuleTeam")) {
-	    		   this.setYuleTeam(this.owner.serializeNBT().getInt("YuleTeam"));
-	    	   }else if(this.owner instanceof Player) {
-	        	   this.setYuleTeam(4);
-	    	   }
-	       }
-        return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
-     }
+	 @Override
+	 public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+		 spawnGroupData=super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+		 if (!this.getPersistentData().contains("YuleTeam")||getPersistentData().getInt("YuleTeam")==0) {
+			 this.setYuleTeam(this.getYuleDefaultTeam());
+		 }
+		 if (this.owner != null) {
+			 if (this.owner.getPersistentData().contains("YuleTeam")) {
+				 this.setYuleTeam(this.owner.getPersistentData().getInt("YuleTeam"));
+			 } else if (this.owner instanceof Player) {
+				 this.setYuleTeam(4);
+			 }
+		 }
+		 return spawnGroupData;
+	 }
      
      @Override
      public boolean isAlliedTo(Entity e) {
      	if(this.getOwner()!=null) {
      		return this.getOwner().isAlliedTo(e);
      	}else {
- 	    	if(this.serializeNBT().contains("YuleTeam")) {
- 	    		int teamOwner = this.serializeNBT().getInt("YuleTeam");
- 			    	if(e.serializeNBT().contains("YuleTeam")) {	
- 				    	 int teamTarget = e.serializeNBT().getInt("YuleTeam");
- 				    	 
- 					    		return teamOwner == teamTarget ? true : super.isAlliedTo(e);
- 			    	}else {
- 			    		
- 				    			return super.isAlliedTo(e);
- 				    		
- 			    	}
- 	    	}else {
- 	    		return super.isAlliedTo(e);
- 	    	}
+			int teamOwner = this.getYuleTeam();
+			if(e instanceof AbstractYuleEntity mob && mob.getYuleTeam()== this.getYuleTeam()){
+				return true;
+			}else if (e.getPersistentData().contains("DSTeam") && teamOwner == e.getPersistentData().getInt("DSTeam")) {
+				return true;
+			} else {
+				return super.isAlliedTo(e);
+			}
      	}
      }
      

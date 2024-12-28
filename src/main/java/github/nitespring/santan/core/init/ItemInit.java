@@ -5,9 +5,7 @@ import github.nitespring.santan.common.item.CandybarGreatsword;
 import github.nitespring.santan.common.item.YuleFoods;
 import github.nitespring.santan.core.enums.YuleTiers;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.*;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -34,7 +32,9 @@ public class ItemInit {
 			() -> new Item(new Item.Properties()));
 	
 	public static final DeferredHolder<Item,CandybarGreatsword> CANDY_SWORD = ITEMS.register("candy_sword", 
-			() -> new CandybarGreatsword(YuleTiers.CANDY, 3, -2.5F, new Item.Properties()));
+			() -> new CandybarGreatsword(YuleTiers.CANDY, new Item.Properties()
+					.attributes(SwordItem.createAttributes(YuleTiers.CANDY, 3, -2.5F)).rarity(Rarity.EPIC)));
+
 	
 
 }

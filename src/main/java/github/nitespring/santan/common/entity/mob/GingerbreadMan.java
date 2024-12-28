@@ -36,13 +36,12 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
@@ -64,7 +63,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 	protected int getYuleDefaultTeam() {return 0;}
 	
 	@Override
-	public void registerControllers(ControllerRegistrar data) {
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
 		data.add(new AnimationController<>(this, "main_controller", 4, this::predicate));
 		data.add(new AnimationController<>(this, "stun_controller", 2, this::hitStunPredicate));
 		data.add(new AnimationController<>(this, "rotation_controller", 0, this::rotationPredicate));
@@ -158,15 +157,6 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 		  }
 	 
 	 
-	 @Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_,
-			MobSpawnType p_21436_, SpawnGroupData p_21437_, CompoundTag p_21438_) {
-		
-		
-		 
-		return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
-	}
-	 
 
 	
 	
@@ -191,7 +181,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.5f)*this.getLookAngle().x,
 											0.25,
-											(1.5f)*this.getLookAngle().z), 
+											(1.5f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -211,7 +201,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 							this.position().add((1.5f)*this.getLookAngle().x,
 												0.25,
-												(1.5f)*this.getLookAngle().z), 
+												(1.5f)*this.getLookAngle().z),
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -231,7 +221,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.5f)*this.getLookAngle().x,
 											0.25,
-											(1.5f)*this.getLookAngle().z), 
+											(1.5f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -284,7 +274,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.5f)*this.getLookAngle().x,
 											0.25,
-											(1.5f)*this.getLookAngle().z), 
+											(1.5f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -318,7 +308,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 					this.position().z+new Random().nextDouble()-0.5, 
 					7,  
 					off.x, 
-					off.y + 1.0D, 
+					off.y + 1.0D,
 					off.z, 0.05D);
 			}
 		}
@@ -463,7 +453,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 			  this.doMovement(target, reach);
 			  this.checkForCloseRangeAttack(distance, reach);
 			  if(this.mob.getRandom().nextInt(4096)>=4048) {this.mob.setAnimationState(23);}
-			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0); 
+			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
 			
 		}
 		

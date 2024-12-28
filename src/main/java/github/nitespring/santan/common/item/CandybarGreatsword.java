@@ -10,16 +10,11 @@ import net.minecraft.world.item.Tier;
 
 public class CandybarGreatsword extends SwordItem{
 
-	public CandybarGreatsword(Tier p_43269_, int p_43270_, float p_43271_, Properties p_43272_) {
-		super(p_43269_, p_43270_, p_43271_, p_43272_);
-	}
-	
-	@Override
-	public Rarity getRarity(ItemStack p_41461_) {
 
-		return Rarity.EPIC;
+	public CandybarGreatsword(Tier pTier, Properties pProperties) {
+		super(pTier, pProperties);
 	}
-	
+
 	@Override
 	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity user) {
 		

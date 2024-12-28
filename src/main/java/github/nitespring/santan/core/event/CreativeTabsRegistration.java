@@ -4,12 +4,12 @@ import github.nitespring.santan.SaNtaNMod;
 import github.nitespring.santan.core.init.ItemInit;
 
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
-@Mod.EventBusSubscriber(modid = SaNtaNMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+
+@EventBusSubscriber(modid = SaNtaNMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CreativeTabsRegistration {
 	
 	
@@ -21,21 +21,21 @@ public class CreativeTabsRegistration {
 	    {
 	        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS)
 	        {
-	            event.accept(ItemInit.SNOWMAN);
-	            event.accept(ItemInit.GINGERBREAD);
-	            event.accept(ItemInit.ELF);
+	            event.accept(ItemInit.SNOWMAN.get());
+	            event.accept(ItemInit.GINGERBREAD.get());
+	            event.accept(ItemInit.ELF.get());
 	            
 	        }
 	        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
 	        {
-	            event.accept(ItemInit.CANDY_CLUMP);
-	            event.accept(ItemInit.CANDY_FRAGMENT);
-	            event.accept(ItemInit.SNOWFLAKE);
+	            event.accept(ItemInit.CANDY_CLUMP.get());
+	            event.accept(ItemInit.CANDY_FRAGMENT.get());
+	            event.accept(ItemInit.SNOWFLAKE.get());
 	            
 	        }
 	        if (event.getTabKey() == CreativeModeTabs.COMBAT)
 	        {
-	            event.accept(ItemInit.CANDY_SWORD);
+	            event.accept(ItemInit.CANDY_SWORD.get());
 	            
 	        }
 	      

@@ -37,14 +37,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
@@ -66,7 +62,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 	protected int getYuleDefaultTeam() {return 0;}
 	
 	@Override
-	public void registerControllers(ControllerRegistrar data) {
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
 		data.add(new AnimationController<>(this, "main_controller", 4, this::predicate));
 		data.add(new AnimationController<>(this, "stun_controller", 2, this::hitStunPredicate));
 		data.add(new AnimationController<>(this, "rotation_controller", 0, this::rotationPredicate));
@@ -161,9 +157,9 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 	 public int getCoatColour() {return this.entityData.get(COLOUR);}
 	 public void setCoatColour(int i) {this.entityData.set(COLOUR, i);}
 	 @Override
-	 protected void defineSynchedData() {
-	     super.defineSynchedData();
-	     this.entityData.define(COLOUR, 0);   
+	 protected void defineSynchedData(SynchedEntityData.Builder builder) {
+	     super.defineSynchedData(builder);
+	     builder.define(COLOUR, 0);
 	 }
 	 
 	 @Override
@@ -179,25 +175,21 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 		tag.putInt("CoatColour", this.getCoatColour());
 			
 	 }
-	 
-	 
-	 @Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_,
-			MobSpawnType p_21436_, SpawnGroupData p_21437_, CompoundTag p_21438_) {
-		
-		 int r = new Random().nextInt(255);
-		 
-		 if(r<=127) {
-			 this.setCoatColour(1);
-		 }else{
-			 this.setCoatColour(0);
-		 }
-		 
-		return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
-	}
-	 
 
-	
+	@Override
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @org.jetbrains.annotations.Nullable SpawnGroupData spawnGroupData) {
+		int r = new Random().nextInt(255);
+
+		if(r<=127) {
+			this.setCoatColour(1);
+		}else{
+			this.setCoatColour(0);
+		}
+		return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+	}
+
+
+
 	
 	 @Override
 		public void tick() {
@@ -225,7 +217,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.0f)*this.getLookAngle().x,
 											0.25,
-											(1.0f)*this.getLookAngle().z), 
+											(1.0f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -249,7 +241,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 							this.position().add((1.0f)*this.getLookAngle().x,
 												0.25,
-												(1.0f)*this.getLookAngle().z), 
+												(1.0f)*this.getLookAngle().z),
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -268,7 +260,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.0f)*this.getLookAngle().x,
 											0.25,
-											(1.0f)*this.getLookAngle().z), 
+											(1.0f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -288,7 +280,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 							this.position().add((1.0f)*this.getLookAngle().x,
 												0.25,
-												(1.0f)*this.getLookAngle().z), 
+												(1.0f)*this.getLookAngle().z),
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -308,7 +300,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 							this.position().add((1.0f)*this.getLookAngle().x,
 												0.25,
-												(1.0f)*this.getLookAngle().z), 
+												(1.0f)*this.getLookAngle().z),
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -328,7 +320,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 							this.position().add((1.0f)*this.getLookAngle().x,
 												0.25,
-												(1.0f)*this.getLookAngle().z), 
+												(1.0f)*this.getLookAngle().z),
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -358,11 +350,11 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 		if(this.level() instanceof ServerLevel) {
 			((ServerLevel) this.level()).sendParticles( new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()), 
 					this.position().x+new Random().nextDouble()-0.5, 
-					this.position().y+new Random().nextDouble()*1.2-0.4, 
+					this.position().y+new Random().nextDouble()*1.2-0.4,
 					this.position().z+new Random().nextDouble()-0.5, 
 					4,  
 					off.x, 
-					off.y + 1.0D, 
+					off.y + 1.0D,
 					off.z, 0.05D);
 			}
 		}
@@ -497,7 +489,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 
 			  this.doMovement(target, reach);
 			  this.checkForCloseRangeAttack(distance, reach);
-			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0); 
+			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
 			
 		}
 		

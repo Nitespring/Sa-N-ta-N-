@@ -28,6 +28,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -38,13 +39,11 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
@@ -69,7 +68,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	protected int getYuleDefaultTeam() {return 0;}
 	
 	@Override
-	public void registerControllers(ControllerRegistrar data) {
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
 		data.add(new AnimationController<>(this, "main_controller", 4, this::predicate));
 		data.add(new AnimationController<>(this, "stun_controller", 2, this::hitStunPredicate));
 		}
@@ -142,10 +141,10 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	 public void setLightState(int i) {this.entityData.set(LIGHT_STATE, i);}
 	 
 	 @Override
-	 protected void defineSynchedData() {
-	     super.defineSynchedData();
-	     this.entityData.define(SNOWMAN_TYPE, 0);
-	     this.entityData.define(LIGHT_STATE, 0);   
+	 protected void defineSynchedData(SynchedEntityData.Builder builder) {
+	     super.defineSynchedData(builder);
+	     builder.define(SNOWMAN_TYPE, 0);
+	    builder.define(LIGHT_STATE, 0);
 	 }
 	 
 	 @Override
@@ -161,40 +160,35 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 		tag.putInt("SnowmanType", this.getSnowmanType());
 			
 	 }
-	 
-	 @Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_,
-			MobSpawnType p_21436_, SpawnGroupData p_21437_, CompoundTag p_21438_) {
-		
-		 int r = new Random().nextInt(255);
-		 
-		 if(r<=80) {
-			 this.setSnowmanType(0);
-		 }else if(r<=110) {
-			 this.setSnowmanType(5);
-		 }else if(r<=170) {
-			 this.setSnowmanType(2);
-		 }else if(r<=220) {
-			 this.setSnowmanType(1);
-		 }else if(r<=250) {
-			 this.setSnowmanType(4);
-		 }else{
-			 this.setSnowmanType(3); 
-		 }
-			 
-		 
-		 
-		 
-		return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
+
+	@Override
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @org.jetbrains.annotations.Nullable SpawnGroupData spawnGroupData) {
+		int r = new Random().nextInt(255);
+
+		if(r<=80) {
+			this.setSnowmanType(0);
+		}else if(r<=110) {
+			this.setSnowmanType(5);
+		}else if(r<=170) {
+			this.setSnowmanType(2);
+		}else if(r<=220) {
+			this.setSnowmanType(1);
+		}else if(r<=250) {
+			this.setSnowmanType(4);
+		}else{
+			this.setSnowmanType(3);
+		}
+		return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
 	}
+
 	 
 	 @Override
 	 public void aiStep() {
 	      super.aiStep();
 
-	         if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
-	            return;
-	         }
+			 if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(this.level(), this)) {
+				 return;
+			 }
 
 	         BlockState blockstate = Blocks.SNOW.defaultBlockState();
 
@@ -217,7 +211,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 			this.playAnimation();
 			}
 			if(this.getSnowmanType()==4||this.getSnowmanType()==5) {
-			this.setLightState(this.getLightState()+1);	
+			this.setLightState(this.getLightState()+1);
 			if(this.getLightState()>=13) {
 				this.setLightState(0);
 			}
@@ -238,7 +232,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.0f)*this.getLookAngle().x,
 											0.25,
-											(1.0f)*this.getLookAngle().z), 
+											(1.0f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -258,7 +252,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 							this.position().add((1.0f)*this.getLookAngle().x,
 												0.25,
-												(1.0f)*this.getLookAngle().z), 
+												(1.0f)*this.getLookAngle().z),
 							(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 							h.setOwner(this);
 							this.level().addFreshEntity(h);
@@ -278,7 +272,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
 						this.position().add((1.0f)*this.getLookAngle().x,
 											0.25,
-											(1.0f)*this.getLookAngle().z), 
+											(1.0f)*this.getLookAngle().z),
 						(float)this.getAttributeValue(Attributes.ATTACK_DAMAGE)+2, 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
@@ -314,7 +308,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 					this.position().z+new Random().nextDouble()-0.5, 
 					6,  
 					off.x, 
-					off.y + 1.0D, 
+					off.y + 1.0D,
 					off.z, 0.05D);
 			}
 		}
@@ -449,7 +443,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 
 			  this.doMovement(target, reach);
 			  this.checkForCloseRangeAttack(distance, reach);
-			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0); 
+			  this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
 			
 		}
 		

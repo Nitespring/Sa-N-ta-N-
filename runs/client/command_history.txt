@@ -1,0 +1,3 @@
+/time set midnight
+/locate biome minecraft:snowy_plains
+/tp @s -836 132 1957
