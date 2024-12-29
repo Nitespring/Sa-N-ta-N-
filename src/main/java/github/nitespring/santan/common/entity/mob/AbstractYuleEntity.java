@@ -218,10 +218,10 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 	      }
 	   } 
      
-     public static boolean checkSnowMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219014_, ServerLevelAccessor level, MobSpawnType p_219016_, BlockPos p_219017_, RandomSource p_219018_) {
+     public static boolean checkSnowMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219014_, ServerLevelAccessor level, MobSpawnType p_219016_, BlockPos pos, RandomSource p_219018_) {
          return level.getDifficulty() != Difficulty.PEACEFUL
-				 && (isDarkEnoughToSpawn(level, p_219017_, p_219018_) || level.getLevel().isRaining())
-				 && checkSnowMobSpawnRules(p_219014_, level, p_219016_, p_219017_, p_219018_);
+				 && (isDarkEnoughToSpawn(level, pos, p_219018_) || (level.getLevel().isRaining() && level.canSeeSky(pos)))
+				 && checkSnowMobSpawnRules(p_219014_, level, p_219016_, pos, p_219018_);
       }
 
 	public static boolean checkSnowAnyLightMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219020_, LevelAccessor p_219021_, MobSpawnType p_219022_, BlockPos p_219023_, RandomSource p_219024_) {
