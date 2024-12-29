@@ -5,6 +5,8 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import github.nitespring.santan.common.entity.util.DamageHitboxEntity;
+import github.nitespring.santan.core.tags.CustomBiomeTags;
+import github.nitespring.santan.core.tags.CustomBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 
 public abstract class AbstractYuleEntity extends PathfinderMob{
 
@@ -215,30 +218,34 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 	      }
 	   } 
      
-     public static boolean checkYuleMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219014_, ServerLevelAccessor p_219015_, MobSpawnType p_219016_, BlockPos p_219017_, RandomSource p_219018_) {
-         return p_219015_.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(p_219015_, p_219017_, p_219018_) && checkYuleMobSpawnRules(p_219014_, p_219015_, p_219016_, p_219017_, p_219018_);
+     public static boolean checkSnowMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219014_, ServerLevelAccessor level, MobSpawnType p_219016_, BlockPos p_219017_, RandomSource p_219018_) {
+         return level.getDifficulty() != Difficulty.PEACEFUL
+				 && (isDarkEnoughToSpawn(level, p_219017_, p_219018_) || level.getLevel().isRaining())
+				 && checkSnowMobSpawnRules(p_219014_, level, p_219016_, p_219017_, p_219018_);
       }
 
-      public static boolean checkYuleAnyLightMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219020_, LevelAccessor p_219021_, MobSpawnType p_219022_, BlockPos p_219023_, RandomSource p_219024_) {
-         return p_219021_.getDifficulty() != Difficulty.PEACEFUL && checkYuleMobSpawnRules(p_219020_, p_219021_, p_219022_, p_219023_, p_219024_);
-      }
+	public static boolean checkSnowAnyLightMonsterSpawnRules(EntityType<? extends AbstractYuleEntity> p_219020_, LevelAccessor p_219021_, MobSpawnType p_219022_, BlockPos p_219023_, RandomSource p_219024_) {
+		return p_219021_.getDifficulty() != Difficulty.PEACEFUL
+			 && checkSnowMobSpawnRules(p_219020_, p_219021_, p_219022_, p_219023_, p_219024_);
+	}
 
-      public static boolean checkYuleMobSpawnRules(EntityType<? extends AbstractYuleEntity> p_217058_, LevelAccessor p_217059_, MobSpawnType p_217060_, BlockPos p_217061_, RandomSource p_217062_) {
-          BlockPos blockpos = p_217061_.below();
-          return p_217060_ == MobSpawnType.SPAWNER || p_217059_.getBlockState(blockpos).isValidSpawn(p_217059_, blockpos, p_217058_);
-       }
+	public static boolean checkSnowMobSpawnRules(EntityType<? extends AbstractYuleEntity> e, LevelAccessor level, MobSpawnType p_217060_, BlockPos pos, RandomSource r) {
+		BlockPos blockpos = pos.below();
+		return (level.getBlockState(blockpos).is(CustomBlockTags.SPAWN_SNOW_ENEMIES) || level.getBiome(pos).is(CustomBiomeTags.SPAWN_SNOW_ENEMIES_DAFAULT))
+				&& (p_217060_ == MobSpawnType.SPAWNER || level.getBlockState(blockpos).isValidSpawn(level, blockpos, e));
+	}
       
       
-      public static boolean isDarkEnoughToSpawn(ServerLevelAccessor p_33009_, BlockPos p_33010_, RandomSource p_33011_) {
-          if (p_33009_.getBrightness(LightLayer.SKY, p_33010_) > p_33011_.nextInt(32)) {
-             return false;
-          } else if (p_33009_.getBrightness(LightLayer.BLOCK, p_33010_) > 0) {
-             return false;
-          } else {
-             int i = p_33009_.getLevel().isThundering() ? p_33009_.getMaxLocalRawBrightness(p_33010_, 10) : p_33009_.getMaxLocalRawBrightness(p_33010_);
-             return i <= p_33011_.nextInt(8);
-          }
-       }
+	public static boolean isDarkEnoughToSpawn(ServerLevelAccessor p_33009_, BlockPos p_33010_, RandomSource p_33011_) {
+		if (p_33009_.getBrightness(LightLayer.SKY, p_33010_) > p_33011_.nextInt(32)) {
+		 	return false;
+		} else if (p_33009_.getBrightness(LightLayer.BLOCK, p_33010_) > 0) {
+		 	return false;
+		} else {
+		 int i = p_33009_.getLevel().isThundering() ? p_33009_.getMaxLocalRawBrightness(p_33010_, 10) : p_33009_.getMaxLocalRawBrightness(p_33010_);
+		 	return i <= p_33011_.nextInt(8);
+		}
+	}
       
       @Override
 		protected void registerGoals() {

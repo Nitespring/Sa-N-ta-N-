@@ -1,6 +1,16 @@
 {
   "type": "neoforge:add_spawns",
-  "biomes": "#c:is_cold/overworld",
+  "biomes": {
+    "type": "neoforge:and",
+    "values":
+    [
+      "#minecraft:is_overworld",
+      {
+        "type": "neoforge:not",
+        "value": "#c:no_default_monsters"
+      }
+    ]
+  },
   "spawners": {
     "type": "santan:gingerbread_man",
     "weight": 100,

@@ -23,17 +23,17 @@ public class EntitySpawnRegistration {
             event.register(EntityInit.SNOWMAN.get(),
             		SpawnPlacementTypes.ON_GROUND,
             		Types.MOTION_BLOCKING_NO_LEAVES, 
-            		AbstractYuleEntity::checkYuleMonsterSpawnRules,
+            		AbstractYuleEntity::checkSnowMonsterSpawnRules,
 					RegisterSpawnPlacementsEvent.Operation.REPLACE);
 			event.register(EntityInit.GINGERBREAD.get(),
 					SpawnPlacementTypes.ON_GROUND,
 					Types.MOTION_BLOCKING_NO_LEAVES,
-            		AbstractYuleEntity::checkYuleMonsterSpawnRules,
+            		AbstractYuleEntity::checkSnowMonsterSpawnRules,
 					RegisterSpawnPlacementsEvent.Operation.REPLACE);
 			event.register(EntityInit.ELF.get(),
 					SpawnPlacementTypes.ON_GROUND,
 					Types.MOTION_BLOCKING_NO_LEAVES,
-            		AbstractYuleEntity::checkYuleMonsterSpawnRules,
+            		AbstractYuleEntity::checkSnowMonsterSpawnRules,
 					RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }
