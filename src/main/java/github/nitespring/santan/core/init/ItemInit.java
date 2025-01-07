@@ -21,6 +21,10 @@ public class ItemInit {
 			() -> new SpawnEggItem(EntityInit.GINGERBREAD.get(), 5253403, 16729088, new Item.Properties()));
 	public static final DeferredHolder<Item,Item> ELF = ITEMS.register("elf_spawn_egg", 
 			() -> new SpawnEggItem(EntityInit.ELF.get(), 12124160, 1142289, new Item.Properties()));
+	public static final DeferredHolder<Item,Item> TREE = ITEMS.register("tree_spawn_egg",
+			() -> new SpawnEggItem(EntityInit.TREE.get(), 12124160, 1142289, new Item.Properties()));
+	public static final DeferredHolder<Item,Item> SNOWY_TREE = ITEMS.register("snowy_tree_spawn_egg",
+			() -> new SpawnEggItem(EntityInit.SNOWY_TREE.get(), 12124160, 1142289, new Item.Properties()));
 	
 	public static final DeferredHolder<Item,Item> SNOWFLAKE = ITEMS.register("snowflake", 
 			() -> new Item(new Item.Properties()));

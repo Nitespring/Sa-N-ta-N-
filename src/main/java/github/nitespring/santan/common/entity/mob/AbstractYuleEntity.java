@@ -1,5 +1,6 @@
 package github.nitespring.santan.common.entity.mob;
 
+import java.util.EnumSet;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -19,20 +20,13 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,6 +34,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class AbstractYuleEntity extends PathfinderMob{
 
@@ -180,7 +175,7 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 			int teamOwner = this.getYuleTeam();
 			if(e instanceof AbstractYuleEntity mob && mob.getYuleTeam()== this.getYuleTeam()){
 				return true;
-			}else if (e.getPersistentData().contains("DSTeam") && teamOwner == e.getPersistentData().getInt("DSTeam")) {
+			}else if (e.getPersistentData().contains("YuleTeam") && teamOwner == e.getPersistentData().getInt("YuleTeam")) {
 				return true;
 			} else {
 				return super.isAlliedTo(e);
@@ -254,8 +249,8 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
     	  this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     	  this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Villager.class, true));
     	  
-			this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, LivingEntity.class, 1.0F));
-		      this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+			this.goalSelector.addGoal(8, new AbstractYuleEntity.LookAtPlayerGoal(this, LivingEntity.class, 1.0F));
+		      this.goalSelector.addGoal(8, new AbstractYuleEntity.RandomLookAroundGoal(this));
 		
 		      this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
 		      
@@ -263,8 +258,200 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 
 		      this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 	     
-		      this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+		      this.goalSelector.addGoal(3, new AbstractYuleEntity.WaterAvoidingRandomStrollGoal(this, 0.8D));
 		      
 		}
-	
+
+	public class WaterAvoidingRandomStrollGoal extends RandomStrollGoal {
+		public static final float PROBABILITY = 0.001F;
+		protected final float probability;
+
+		public WaterAvoidingRandomStrollGoal(AbstractYuleEntity mob, double speedModifier) {
+			this(mob, speedModifier, 0.001F);
+		}
+
+		public WaterAvoidingRandomStrollGoal(AbstractYuleEntity mob, double speedModifier, float probability) {
+			super(mob, speedModifier);
+			this.probability = probability;
+		}
+
+		@Override
+		public boolean canUse() {
+			if(((AbstractYuleEntity)mob).getAnimationState()!=0){
+				return false;
+			}else {
+				return super.canUse();
+			}
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			if(((AbstractYuleEntity)mob).getAnimationState()!=0){
+				return false;
+			}else {
+				return super.canContinueToUse();
+			}
+		}
+
+		@Nullable
+		@Override
+		protected Vec3 getPosition() {
+			if (this.mob.isInWaterOrBubble()) {
+				Vec3 vec3 = LandRandomPos.getPos(this.mob, 15, 7);
+				return vec3 == null ? super.getPosition() : vec3;
+			} else {
+				return this.mob.getRandom().nextFloat() >= this.probability ? LandRandomPos.getPos(this.mob, 10, 7) : super.getPosition();
+			}
+		}
+	}
+	public class RandomLookAroundGoal extends Goal {
+		private final AbstractYuleEntity mob;
+		private double relX;
+		private double relZ;
+		private int lookTime;
+
+		public RandomLookAroundGoal(AbstractYuleEntity mob) {
+			this.mob = mob;
+			this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+		}
+
+		@Override
+		public boolean canUse() {
+			if(mob.getAnimationState()!=0){
+				return false;
+			}else {
+				return this.mob.getRandom().nextFloat() < 0.02F;
+			}
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			if(mob.getAnimationState()!=0){
+				return false;
+			}else {
+				return this.lookTime >= 0;
+			}
+		}
+
+		@Override
+		public void start() {
+			double d0 = (Math.PI * 2) * this.mob.getRandom().nextDouble();
+			this.relX = Math.cos(d0);
+			this.relZ = Math.sin(d0);
+			this.lookTime = 20 + this.mob.getRandom().nextInt(20);
+		}
+
+		@Override
+		public boolean requiresUpdateEveryTick() {
+			return true;
+		}
+
+		@Override
+		public void tick() {
+			this.lookTime--;
+			this.mob.getLookControl().setLookAt(this.mob.getX() + this.relX, this.mob.getEyeY(), this.mob.getZ() + this.relZ);
+		}
+	}
+	public class LookAtPlayerGoal extends Goal {
+		public static final float DEFAULT_PROBABILITY = 0.02F;
+		protected final AbstractYuleEntity mob;
+		@Nullable
+		protected Entity lookAt;
+		protected final float lookDistance;
+		private int lookTime;
+		protected final float probability;
+		private final boolean onlyHorizontal;
+		protected final Class<? extends LivingEntity> lookAtType;
+		protected final TargetingConditions lookAtContext;
+
+		public LookAtPlayerGoal(AbstractYuleEntity mob, Class<? extends LivingEntity> lookAtType, float lookDistance) {
+			this(mob, lookAtType, lookDistance, 0.02F);
+		}
+
+		public LookAtPlayerGoal(AbstractYuleEntity mob, Class<? extends LivingEntity> lookAtType, float lookDistance, float probability) {
+			this(mob, lookAtType, lookDistance, probability, false);
+		}
+
+		public LookAtPlayerGoal(AbstractYuleEntity mob, Class<? extends LivingEntity> lookAtType, float lookDistance, float probability, boolean onlyHorizontal) {
+			this.mob = mob;
+			this.lookAtType = lookAtType;
+			this.lookDistance = lookDistance;
+			this.probability = probability;
+			this.onlyHorizontal = onlyHorizontal;
+			this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+			if (lookAtType == Player.class) {
+				this.lookAtContext = TargetingConditions.forNonCombat()
+						.range((double)lookDistance)
+						.selector(p_25531_ -> EntitySelector.notRiding(mob).test(p_25531_));
+			} else {
+				this.lookAtContext = TargetingConditions.forNonCombat().range((double)lookDistance);
+			}
+		}
+
+		@Override
+		public boolean canUse() {
+			if(mob.getAnimationState()!=0&&this.mob.getTarget()==null){
+				return false;
+			}else if (this.mob.getRandom().nextFloat() >= this.probability) {
+				return false;
+			} else {
+				if (this.mob.getTarget() != null) {
+					this.lookAt = this.mob.getTarget();
+				}
+
+				if (this.lookAtType == Player.class) {
+					this.lookAt = this.mob.level().getNearestPlayer(this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+				} else {
+					this.lookAt = this.mob
+							.level()
+							.getNearestEntity(
+									this.mob
+											.level()
+											.getEntitiesOfClass(
+													this.lookAtType,
+													this.mob.getBoundingBox().inflate((double)this.lookDistance, 3.0, (double)this.lookDistance),
+													p_148124_ -> true
+											),
+									this.lookAtContext,
+									this.mob,
+									this.mob.getX(),
+									this.mob.getEyeY(),
+									this.mob.getZ()
+							);
+				}
+
+				return this.lookAt != null;
+			}
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			if(mob.getAnimationState()!=0&&this.mob.getTarget()==null){
+				return false;
+			}else if (!this.lookAt.isAlive()) {
+				return false;
+			} else {
+				return this.mob.distanceToSqr(this.lookAt) > (double)(this.lookDistance * this.lookDistance) ? false : this.lookTime > 0;
+			}
+		}
+
+		@Override
+		public void start() {
+			this.lookTime = this.adjustedTickDelay(40 + this.mob.getRandom().nextInt(40));
+		}
+
+		@Override
+		public void stop() {
+			this.lookAt = null;
+		}
+
+		@Override
+		public void tick() {
+			if (this.lookAt.isAlive()) {
+				double d0 = this.onlyHorizontal ? this.mob.getEyeY() : this.lookAt.getEyeY();
+				this.mob.getLookControl().setLookAt(this.lookAt.getX(), d0, this.lookAt.getZ());
+				this.lookTime--;
+			}
+		}
+	}
 }

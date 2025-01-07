@@ -1,9 +1,7 @@
 package github.nitespring.santan.core.init;
 
 import github.nitespring.santan.SaNtaNMod;
-import github.nitespring.santan.common.entity.mob.EvilElf;
-import github.nitespring.santan.common.entity.mob.EvilSnowman;
-import github.nitespring.santan.common.entity.mob.GingerbreadMan;
+import github.nitespring.santan.common.entity.mob.*;
 import github.nitespring.santan.common.entity.util.DamageHitboxEntity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,10 +26,22 @@ public class EntityInit {
 			() -> EntityType.Builder.<GingerbreadMan>of(GingerbreadMan::new, MobCategory.MONSTER)
 			.sized(0.9f, 2.4f)
 			.build("gingerbread_man"));
+	public static final DeferredHolder<EntityType<?>,EntityType<FestiveTree>> TREE = ENTITIES.register("tree",
+			() -> EntityType.Builder.<FestiveTree>of(FestiveTree::new, MobCategory.MONSTER)
+					.sized(0.9f, 2.0f)
+					.build("tree"));
+	public static final DeferredHolder<EntityType<?>,EntityType<SnowyTree>> SNOWY_TREE = ENTITIES.register("snowy_tree",
+			() -> EntityType.Builder.<SnowyTree>of(SnowyTree::new, MobCategory.MONSTER)
+					.sized(0.9f, 2.0f)
+					.build("snowy_tree"));
 	
 	public static final DeferredHolder<EntityType<?>,EntityType<DamageHitboxEntity>> HITBOX = ENTITIES.register("hitbox",
 			() -> EntityType.Builder.<DamageHitboxEntity>of(DamageHitboxEntity::new, MobCategory.MISC)
 			.sized(1.5f, 1.5f)
 			.build("hitbox"));
+	public static final DeferredHolder<EntityType<?>,EntityType<DamageHitboxEntity>> HITBOX_LARGE = ENTITIES.register("hitbox_large",
+			() -> EntityType.Builder.<DamageHitboxEntity>of(DamageHitboxEntity::new, MobCategory.MISC)
+					.sized(3.5f, 2.5f)
+					.build("hitbox_large"));
 
 }

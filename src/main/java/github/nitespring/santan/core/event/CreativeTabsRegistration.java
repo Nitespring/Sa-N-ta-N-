@@ -24,6 +24,8 @@ public class CreativeTabsRegistration {
 	            event.accept(ItemInit.SNOWMAN.get());
 	            event.accept(ItemInit.GINGERBREAD.get());
 	            event.accept(ItemInit.ELF.get());
+				event.accept(ItemInit.TREE.get());
+				event.accept(ItemInit.SNOWY_TREE.get());
 	            
 	        }
 	        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
