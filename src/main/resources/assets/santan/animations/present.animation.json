@@ -1,0 +1,85 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.model.explode": {
+			"animation_length": 2,
+			"bones": {
+				"present": {
+					"position": {
+						"0.0": {
+							"vector": [0, "0-1*Math.sin(query.anim_time*360)", 0]
+						},
+						"0.125": {
+							"vector": [0, -1, 0]
+						},
+						"1.5": {
+							"vector": [0, 2, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": ["1-0.1*Math.sin(query.anim_time*360)", "1-0.1*Math.sin(query.anim_time*360)", "1-0.1*Math.sin(query.anim_time*360)"]
+						},
+						"0.125": {
+							"vector": [0.9, 0.9, 0.9]
+						},
+						"1.0": {
+							"vector": [1.1, 1.1, 1.1]
+						},
+						"1.5": {
+							"vector": [1.5, 1.25, 1.5]
+						}
+					}
+				}
+			}
+		},
+		"animation.model.ribbon": {
+			"loop": true,
+			"bones": {
+				"ribbon1": {
+					"rotation": {
+						"vector": ["10+15*Math.sin(query.anim_time*180)", "5*Math.sin(query.anim_time*270)", "5-5*Math.sin(query.anim_time*180)"]
+					}
+				},
+				"ribbon2": {
+					"rotation": {
+						"vector": ["10+15*Math.cos(query.anim_time*180)", "-5*Math.cos(query.anim_time*270)", "-5-5*Math.sin(query.anim_time*180)"]
+					}
+				},
+				"ribbon3": {
+					"rotation": {
+						"vector": ["-5+10*Math.sin(query.anim_time*180)", "45+15*Math.cos(query.anim_time*270)", "5-10*Math.sin(query.anim_time*180)"]
+					}
+				},
+				"ribbon4": {
+					"rotation": {
+						"vector": ["-5-25*Math.cos(query.anim_time*180)", "-45*Math.sin(query.anim_time*270)", "5+15*Math.cos(query.anim_time*180)"]
+					}
+				},
+				"ribbon5": {
+					"rotation": {
+						"vector": ["-5-20*Math.sin(query.anim_time*180)", "-45*Math.cos(query.anim_time*270)", "5+15*Math.sin(query.anim_time*180)"]
+					}
+				},
+				"ribbon6": {
+					"rotation": {
+						"vector": ["-5-10*Math.sin(query.anim_time*180)", "-45-15*Math.sin(query.anim_time*270)", "-5+10*Math.sin(query.anim_time*180)"]
+					}
+				},
+				"ribbon7": {
+					"rotation": {
+						"vector": ["-5+25*Math.cos(query.anim_time*180)", "45*Math.cos(query.anim_time*270)", "5-15*Math.cos(query.anim_time*180)"]
+					}
+				},
+				"ribbon8": {
+					"rotation": {
+						"vector": ["-5+20*Math.sin(query.anim_time*180)", "45*Math.sin(query.anim_time*270)", "5-15*Math.sin(query.anim_time*180)"]
+					}
+				}
+			}
+		},
+		"animation.model.new": {
+			"loop": true
+		}
+	}
+}
