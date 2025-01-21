@@ -107,8 +107,8 @@ public class ExplosivePresentGeoRenderer<T extends ExplosivePresent> extends Geo
 			GeoBone ribbon = this.getAnimationProcessor().getBone("ribbon_root");
 			assert customPredicate != null;
 			EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
-			present.setRotY(extraData.netHeadYaw() * ((float) Math.PI / 180F));
-			ribbon.setRotY(extraData.netHeadYaw() * ((float) Math.PI / 180F));
+			present.setRotY((float) (entity.getPresentRotation()* Math.PI));
+			ribbon.setRotY((float) (entity.getRibbonRotation() * Math.PI));
 
 
 		}

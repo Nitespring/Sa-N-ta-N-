@@ -216,6 +216,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					}
 					if (animationTick == 16) {
 						this.playSound(SoundEvents.GENERIC_EXPLODE.value());
+						this.rangedAttackLarge();
 					}
 					if (animationTick >= 36) {
 						animationTick = 0;
@@ -226,6 +227,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					moveToTarget(1.8f, 10.0f,10.0f);
 					if ((animationTick % 10) == 3) {
 						this.playSound(SoundEvents.GENERIC_EXPLODE.value());
+						this.rangedAttackSmall();
 					}
 					if (animationTick >= 42) {
 						int r2 = new Random().nextInt(255);
@@ -268,6 +270,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					if (animationTick == 6||animationTick == 13||animationTick == 19
 							||animationTick == 23||animationTick == 28||animationTick == 34) {
 						this.playSound(SoundEvents.GENERIC_EXPLODE.value());
+						this.rangedAttackSmall();
 
 					}
 					if (animationTick >= 44) {
@@ -277,6 +280,11 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					break;
 			}
 	 }
+
+	 public void rangedAttackSmall(){}
+	public void rangedAttackLarge(){
+
+	}
 
 	public void moveToTarget(float speed, float deltaYaw, float deltaPitch){
 		boolean flag = this.getTarget()!=null;

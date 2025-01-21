@@ -2,6 +2,7 @@ package github.nitespring.santan.core.event;
 
 import github.nitespring.santan.SaNtaNMod;
 import github.nitespring.santan.client.render.entity.mob.*;
+import github.nitespring.santan.client.render.entity.projectile.ExplosivePresentGeoRenderer;
 import github.nitespring.santan.client.render.entity.projectile.InvisibleProjectileRenderer;
 import github.nitespring.santan.common.entity.mob.SnowyTree;
 import github.nitespring.santan.core.init.EntityInit;
@@ -24,6 +25,7 @@ public class ClientListener {
 		 event.registerEntityRenderer(EntityInit.TREE.get(), FestiveTreeGeoRenderer::new);
 		 event.registerEntityRenderer(EntityInit.HITBOX.get(), InvisibleProjectileRenderer::new);
 		 event.registerEntityRenderer(EntityInit.HITBOX_LARGE.get(), InvisibleProjectileRenderer::new);
+		 event.registerEntityRenderer(EntityInit.PRESENT.get(), ExplosivePresentGeoRenderer::new);
 		 
 	 }
 

@@ -1,5 +1,7 @@
 package github.nitespring.santan.common.entity.mob;
 
+import github.nitespring.santan.common.entity.projectile.ExplosivePresent;
+import github.nitespring.santan.core.init.EntityInit;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -13,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
 
@@ -79,5 +82,24 @@ public class FestiveTree extends Tree{
         }
 
         super.tick();
+    }
+
+    @Override
+    public void rangedAttackSmall() {
+        Random r = new Random();
+        float angleMax = (float) (Math.PI/6);
+        float rx = r.nextFloat(-1,1);
+        float rz = r.nextFloat(-1,1);
+        Vec3 aim0 = new Vec3(0,1,0);
+        Vec3 aimF = aim0.add(Math.cos(angleMax*rx),0,Math.cos(angleMax*rz)).normalize();
+        Vec3 pos0 = this.position();
+
+        Level level = this.level();
+        ExplosivePresent present = new ExplosivePresent(EntityInit.PRESENT.get(),level);
+        present.setPos(pos0.x+0.1*aimF.x(),pos0.y+2.0f,pos0.z+0.1*aimF.z());
+        present.setDeltaMovement(aimF.scale(0.1f));
+        present.setOwner(this);
+        level.addFreshEntity(present);
+
     }
 }

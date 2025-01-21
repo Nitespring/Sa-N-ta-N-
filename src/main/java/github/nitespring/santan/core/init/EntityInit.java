@@ -2,6 +2,7 @@ package github.nitespring.santan.core.init;
 
 import github.nitespring.santan.SaNtaNMod;
 import github.nitespring.santan.common.entity.mob.*;
+import github.nitespring.santan.common.entity.projectile.ExplosivePresent;
 import github.nitespring.santan.common.entity.util.DamageHitboxEntity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,5 +44,10 @@ public class EntityInit {
 			() -> EntityType.Builder.<DamageHitboxEntity>of(DamageHitboxEntity::new, MobCategory.MISC)
 					.sized(3.5f, 2.5f)
 					.build("hitbox_large"));
+	public static final DeferredHolder<EntityType<?>,EntityType<ExplosivePresent>> PRESENT = ENTITIES.register("present",
+			() -> EntityType.Builder.<ExplosivePresent>of(ExplosivePresent::new, MobCategory.MISC)
+					.sized(0.8f, 0.8f)
+					.build("present"));
+
 
 }
