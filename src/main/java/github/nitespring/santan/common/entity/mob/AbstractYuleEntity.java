@@ -29,10 +29,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
@@ -40,7 +37,8 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 
 	protected int hitStunTicks=0;
 	public abstract boolean isBoss();
-	
+
+	private static final EntityDataAccessor<Integer> ANIMATION_TICK = SynchedEntityData.defineId(AbstractYuleEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AbstractYuleEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> COMBAT_STATE = SynchedEntityData.defineId(AbstractYuleEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> ENTITY_STATE = SynchedEntityData.defineId(AbstractYuleEntity.class, EntityDataSerializers.INT);
@@ -56,6 +54,11 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 		super(p_21683_, p_21684_);
 		
 	}
+	public int getAnimationTick() {return this.entityData.get(ANIMATION_TICK);}
+	public void setAnimationTick(int anim) {this.entityData.set(ANIMATION_TICK, anim);}
+	public void increaseAnimationTick(int i) {setAnimationTick(getAnimationTick()+1);}
+	public void increaseAnimationTick() {increaseAnimationTick(1);}
+	public void resetAnimationTick() {setAnimationTick(0);}
 	public int getAnimationState() {return this.entityData.get(ANIMATION_STATE);}
 	public void setAnimationState(int anim) {this.entityData.set(ANIMATION_STATE, anim);}
 	 
@@ -71,6 +74,7 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
+		builder.define(ANIMATION_TICK, 0);
 		builder.define(ANIMATION_STATE, 0);
 		builder.define(COMBAT_STATE, 0);
 		builder.define(ENTITY_STATE, 0);
@@ -182,6 +186,11 @@ public abstract class AbstractYuleEntity extends PathfinderMob{
 			}
      	}
      }
+	@Override
+	public boolean ignoreExplosion(Explosion explosion) {
+
+		return explosion.getDirectSourceEntity() instanceof AbstractYuleEntity||explosion.getIndirectSourceEntity() instanceof AbstractYuleEntity;
+	}
      
      @Override
  	public boolean hurt(DamageSource source, float f) {

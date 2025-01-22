@@ -48,7 +48,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 	
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-	protected int animationTick = 0;
+	 
 	protected Vec3 aimVec;
 	
 	public GingerbreadMan(EntityType<? extends AbstractYuleEntity> p_33002_, Level p_33003_) {
@@ -170,12 +170,12 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 	 
 	 
 	 protected void playAnimation() {
-		 animationTick++;
+		  increaseAnimationTick();
 			this.getNavigation().stop();
 			switch(this.getAnimationState()) {
 			//Attack
 			case 21:
-				if(animationTick==15) {
+				if(getAnimationTick()==15) {
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -188,14 +188,14 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=34) {
-					animationTick=0;
+				if(getAnimationTick()>=34) {
+					resetAnimationTick();
 					setAnimationState(22);
 				}
 				break;
 
 			 case 22:
-					if(animationTick==15) {
+					if(getAnimationTick()==15) {
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -208,14 +208,14 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=38) {
-						animationTick=0;
+					if(getAnimationTick()>=38) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 				
 			case 23:
-				if(animationTick>=15) {
+				if(getAnimationTick()>=15) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -230,7 +230,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						}else{
 					        this.aimVec=this.getLookAngle();
 						}
-						animationTick=0;
+						resetAnimationTick();
 						setAnimationState(24);
 				}
 				break;
@@ -249,7 +249,7 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 				*/
 				//if(this.getTarget()!=null) {this.getLookControl().setLookAt(this.getTarget(), 80.0F, 80.0F);}
 				
-				if((animationTick-5)%10==0) {
+				if((getAnimationTick()-5)%10==0) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -262,13 +262,13 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=57) {
-					animationTick=0;
+				if(getAnimationTick()>=57) {
+					resetAnimationTick();
 					setAnimationState(0);
 				}
 				break;
 			case 25:
-				if(animationTick==10) {
+				if(getAnimationTick()==10) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -281,8 +281,8 @@ public class GingerbreadMan extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=18) {
-					animationTick=0;
+				if(getAnimationTick()>=18) {
+					resetAnimationTick();
 					setAnimationState(0);
 				}
 				break;

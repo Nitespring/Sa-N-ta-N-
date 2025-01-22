@@ -28,7 +28,7 @@ public class FestiveTree extends Tree{
     }
     public static  AttributeSupplier.Builder setCustomAttributes(){
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 30.0D)
+                .add(Attributes.MAX_HEALTH, 24.0D)
                 .add(Attributes.ARMOR, 10.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.18D)
@@ -90,14 +90,47 @@ public class FestiveTree extends Tree{
         float angleMax = (float) (Math.PI/6);
         float rx = r.nextFloat(-1,1);
         float rz = r.nextFloat(-1,1);
+        float rPw = r.nextFloat(0,1);
         Vec3 aim0 = new Vec3(0,1,0);
-        Vec3 aimF = aim0.add(Math.cos(angleMax*rx),0,Math.cos(angleMax*rz)).normalize();
-        Vec3 pos0 = this.position();
+        Vec3 aimF = aim0.add(angleMax*rx,0,angleMax*rz).normalize();
+        Vec3 pos0 = position();
 
-        Level level = this.level();
+        Level level = level();
         ExplosivePresent present = new ExplosivePresent(EntityInit.PRESENT.get(),level);
         present.setPos(pos0.x+0.1*aimF.x(),pos0.y+2.0f,pos0.z+0.1*aimF.z());
-        present.setDeltaMovement(aimF.scale(0.1f));
+        present.setDeltaMovement(aimF.scale(0.25f+0.25f*rPw));
+        present.setExplosionRadius(1.5f);
+        present.setOwner(this);
+        level.addFreshEntity(present);
+
+    }
+
+    @Override
+    public void rangedAttackLarge() {
+        Random r = new Random();
+        float angleMax = (float) (Math.PI/24);
+        float angleY = (float) (Math.PI/6);
+        float rx = r.nextFloat(-1,1);
+        float rz = r.nextFloat(-1,1);
+        float rPw = r.nextFloat(0,1);
+        Vec3 aim0 = getLookAngle();
+        float d0 = 1.0f;
+        if(getTarget()!=null){
+            aim0 = getTarget().position().add(position().scale(-1)).normalize();
+            d0 = Math.min(5,0.1f*distanceTo(getTarget()));
+        }
+        Vec3 aimF = aim0.add(
+                angleMax*rx,
+                angleY*d0,
+                angleMax*rz
+        ).normalize();
+        Vec3 pos0 = position();
+
+        Level level = level();
+        ExplosivePresent present = new ExplosivePresent(EntityInit.PRESENT.get(),level);
+        present.setPos(pos0.x+0.1*aimF.x(),pos0.y+1.5f,pos0.z+0.1*aimF.z());
+        present.setDeltaMovement(aimF.scale(0.75f+0.25f*rPw + 0.25*d0));
+        present.setExplosionRadius(2.0f);
         present.setOwner(this);
         level.addFreshEntity(present);
 

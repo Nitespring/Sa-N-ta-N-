@@ -54,7 +54,7 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	private static final EntityDataAccessor<Integer> LIGHT_STATE = SynchedEntityData.defineId(EvilSnowman.class, EntityDataSerializers.INT);
 	
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-	protected int animationTick = 0;
+	 
 	
 	public EvilSnowman(EntityType<? extends AbstractYuleEntity> p_33002_, Level p_33003_) {
 		super(p_33002_, p_33003_);
@@ -221,12 +221,12 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 	 
 	 
 	 protected void playAnimation() {
-		 animationTick++;
+		  increaseAnimationTick();
 			this.getNavigation().stop();
 			switch(this.getAnimationState()) {
 			//Attack
 			case 21:
-				if(animationTick==7) {
+				if(getAnimationTick()==7) {
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -239,14 +239,14 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=10) {
-					animationTick=0;
+				if(getAnimationTick()>=10) {
+					resetAnimationTick();
 					setAnimationState(22);
 				}
 				break;
 
 			 case 22:
-					if(animationTick==7) {
+					if(getAnimationTick()==7) {
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -259,14 +259,14 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=10) {
-						animationTick=0;
+					if(getAnimationTick()>=10) {
+						resetAnimationTick();
 						setAnimationState(23);
 					}
 					break;
 				
 			case 23:
-				if(animationTick==9) {
+				if(getAnimationTick()==9) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -279,8 +279,8 @@ public class EvilSnowman extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=13) {
-					animationTick=0;
+				if(getAnimationTick()>=13) {
+					resetAnimationTick();
 					setAnimationState(0);
 				}
 				break;

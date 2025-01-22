@@ -28,12 +28,13 @@ import java.util.Random;
 
 public class ExplosivePresent extends AbstractHurtingProjectile implements GeoEntity {
 
+    private static final EntityDataAccessor<Integer> ANIMATION_TICK = SynchedEntityData.defineId(ExplosivePresent.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(ExplosivePresent.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> COLOUR = SynchedEntityData.defineId(ExplosivePresent.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> PRESENT_ROTATION = SynchedEntityData.defineId(ExplosivePresent.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> RIBBON_ROTATION = SynchedEntityData.defineId(ExplosivePresent.class, EntityDataSerializers.FLOAT);
     protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-    protected int animationTick = 0;
+     
     public float explosionRadius = 1.0f;
 
     public ExplosivePresent(EntityType<? extends AbstractHurtingProjectile> entityType, Level level) {
@@ -80,12 +81,27 @@ public class ExplosivePresent extends AbstractHurtingProjectile implements GeoEn
         return PlayState.CONTINUE;
     }
 
+    public void setExplosionRadius(float explosionRadius) {
+        this.explosionRadius = explosionRadius;
+    }
+
+    public float getExplosionRadius() {
+        return explosionRadius;
+    }
+
+    public int getAnimationTick() {return this.entityData.get(ANIMATION_TICK);}
+    public void setAnimationTick(int anim) {this.entityData.set(ANIMATION_TICK, anim);}
+    public void increaseAnimationTick(int i) {setAnimationTick(getAnimationTick()+1);}
+    public void increaseAnimationTick() {increaseAnimationTick(1);}
+    public void resetAnimationTick() {setAnimationTick(0);}
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.factory;
     }
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(ANIMATION_TICK, 0);
         builder.define(ANIMATION_STATE, 0);
         builder.define(COLOUR, 0);
         builder.define(PRESENT_ROTATION, 0F);
@@ -149,11 +165,11 @@ public class ExplosivePresent extends AbstractHurtingProjectile implements GeoEn
     }
 
     protected void playAnimation() {
-        animationTick++;
+         increaseAnimationTick();
         switch(this.getAnimationState()) {
-            //Attack
+            //Explosion
             case 1:
-                if (animationTick >= 30) {
+                if (getAnimationTick() >= 30) {
                     this.explode();
                 }
                 break;

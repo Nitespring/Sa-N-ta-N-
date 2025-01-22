@@ -48,7 +48,7 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 	
 	private static final EntityDataAccessor<Integer> COLOUR = SynchedEntityData.defineId(EvilElf.class, EntityDataSerializers.INT);
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-	protected int animationTick = 0;
+	 
 	
 	public EvilElf(EntityType<? extends AbstractYuleEntity> p_33002_, Level p_33003_) {
 		super(p_33002_, p_33003_);
@@ -201,17 +201,17 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 	 
 	 
 	 protected void playAnimation() {
-		 animationTick++;
+		  increaseAnimationTick();
 			this.getNavigation().stop();
 			switch(this.getAnimationState()) {
 			//Attack
 			case 21:
 				
 				
-				if(animationTick==3) {
+				if(getAnimationTick()==3) {
 					this.setDeltaMovement(this.getLookAngle().normalize().scale(0.4).add(0, 0.5, 0));
 				}
-				if(animationTick==10) {
+				if(getAnimationTick()==10) {
 
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -224,18 +224,18 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=16) {
-					animationTick=0;
+				if(getAnimationTick()>=16) {
+					resetAnimationTick();
 					setAnimationState(0);
 				}
 				break;
 
 			 case 22:
-				 	if(animationTick==5) {
+				 	if(getAnimationTick()==5) {
 						this.setDeltaMovement(this.getLookAngle().normalize().scale(0.4).add(0, 0.5, 0));
 					}
 				 
-					if(animationTick>=7) {
+					if(getAnimationTick()>=7) {
 		
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -247,14 +247,14 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							this.level().addFreshEntity(h);
 							
 					
-						animationTick=0;
+						resetAnimationTick();
 						setAnimationState(23);
 					}
 					break;
 				
 			case 23:
 				this.setDeltaMovement(new Vec3(this.getLookAngle().normalize().x,0,this.getLookAngle().normalize().z).scale(0.1));
-				if(animationTick==3||animationTick==11) {
+				if(getAnimationTick()==3||getAnimationTick()==11) {
 			
 						
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -267,14 +267,14 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 						
 				
 				}
-				if(animationTick>=16) {
-					animationTick=0;
+				if(getAnimationTick()>=16) {
+					resetAnimationTick();
 					setAnimationState(24);
 				}
 				break;
 			
 			 case 24:
-					if(animationTick==5) {
+					if(getAnimationTick()==5) {
 				
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -287,14 +287,14 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=14) {
-						animationTick=0;
+					if(getAnimationTick()>=14) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 				
 				case 25:
-					if(animationTick==6) {
+					if(getAnimationTick()==6) {
 				
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -307,14 +307,14 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=11) {
-						animationTick=0;
+					if(getAnimationTick()>=11) {
+						resetAnimationTick();
 						setAnimationState(26);
 					}
 					break;
 				
 				case 26:
-					if(animationTick==7) {
+					if(getAnimationTick()==7) {
 				
 							
 							DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX.get(), level(), 
@@ -327,8 +327,8 @@ public class EvilElf extends AbstractYuleEntity implements GeoEntity{
 							
 					
 					}
-					if(animationTick>=15) {
-						animationTick=0;
+					if(getAnimationTick()>=15) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;

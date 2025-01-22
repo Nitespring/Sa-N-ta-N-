@@ -12,6 +12,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -43,7 +46,7 @@ import java.util.Random;
 public class Tree extends AbstractYuleEntity implements GeoEntity{
 
 	protected AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-	protected int animationTick = 0;
+	 
 
 	public Tree(EntityType<? extends AbstractYuleEntity> e, Level l) {
 		super(e, l);
@@ -138,9 +141,9 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 		if(this.getAnimationState()!=0&&!this.isDeadOrDying()) {
 			this.playAnimation();
 		}else{
-			if(this.tickCount%3==0) {
+			if(this.tickCount%5==0) {
 				if (this.getTarget() == null && !this.isAggressive()) {
-					int r = new Random().nextInt(1023);
+					int r = new Random().nextInt(2047);
 					if (r <= 4) {
 						setAnimationState(11);
 					}
@@ -149,100 +152,116 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 		}
 		super.tick();
 	}
-	 
-	 
-	 protected void playAnimation() {
-		 animationTick++;
+
+
+
+	@Override
+	public boolean ignoreExplosion(Explosion explosion) {
+
+		return explosion.getDirectSourceEntity() instanceof AbstractYuleEntity||explosion.getIndirectSourceEntity() instanceof AbstractYuleEntity;
+	}
+
+	protected void playAnimation() {
+		  increaseAnimationTick();
+		  Vec3 pos = this.position();
 			switch(this.getAnimationState()) {
 				case 11: //Go Asleep
 					this.stopInPlace();
-					if (animationTick >= 12) {
-						animationTick = 0;
+					this.getNavigation().stop();
+					this.getMoveControl().setWantedPosition(pos.x,pos.y,pos.z,0);
+					this.getLookControl().setLookAt(pos.x,pos.y+1,pos.z);
+					if (getAnimationTick() >= 12) {
+						resetAnimationTick();
 						setAnimationState(12);
 					}
 					break;
 				case 12: //Sleep
 					int r = new Random().nextInt(2047);
 					this.stopInPlace();
-					if ((this.getTarget()!=null&&this.isAggressive())||(r <= 5 && animationTick >=255)) {
-						animationTick = 0;
+					this.getNavigation().stop();
+					this.getMoveControl().setWantedPosition(pos.x,pos.y,pos.z,0);
+					this.getLookControl().setLookAt(pos.x,pos.y+1,pos.z);
+					if ((this.getTarget()!=null&&this.isAggressive())||(r <= 3 && getAnimationTick() >=511)) {
+						resetAnimationTick();
 						setAnimationState(13);
 					}
 					break;
 				case 13: //Wake Up
-					if (animationTick >= 18) {
-						animationTick = 0;
+					if (getAnimationTick() >= 18) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 				case 14: //Fall
-					if (animationTick >= 10) {
-						animationTick = 0;
+					if (getAnimationTick() >= 10) {
+						resetAnimationTick();
 						setAnimationState(15);
 					}
 					break;
 				case 15: //Fallen
 					this.stopInPlace();
-					if (animationTick >= 56) {
+					if (getAnimationTick() >= 56) {
 						int r1 = new Random().nextInt(511);
 						if(r1<=63) {
-							animationTick = 0;
+							resetAnimationTick();
 							setAnimationState(16);
 						}
 					}
 					break;
 				case 16: //Get Up
-					if (animationTick >= 18) {
-						animationTick = 0;
+					if (getAnimationTick() >= 18) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 				case 17: //Endure
-					if (animationTick >= 12) {
-						animationTick = 0;
+					if (getAnimationTick() >= 12) {
+						resetAnimationTick();
 						setAnimationState(24);
 					}
 					break;
 				case 18: //Stop Endure
-					if (animationTick >= 12) {
-						animationTick = 0;
+					if (getAnimationTick() >= 12) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 				//Attack
 				case 21: //Shoot
-					if(animationTick>=8){
+					if(getAnimationTick()>=8){
 						this.stopInPlace();
 					}
-					if (animationTick == 16) {
+					if (getAnimationTick() == 16) {
 						this.playSound(SoundEvents.GENERIC_EXPLODE.value());
+					}
+					if (getAnimationTick() == 20) {
 						this.rangedAttackLarge();
 					}
-					if (animationTick >= 36) {
-						animationTick = 0;
+					if (getAnimationTick() >= 36) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 				case 22: //Run
 					moveToTarget(1.8f, 10.0f,10.0f);
-					if ((animationTick % 10) == 3) {
+					if ((getAnimationTick() % 10) == 3) {
 						this.playSound(SoundEvents.GENERIC_EXPLODE.value());
 						this.rangedAttackSmall();
 					}
-					if (animationTick >= 42) {
+					if (getAnimationTick() >= 64) {
 						int r2 = new Random().nextInt(255);
 						if(r2<=15) {
 							this.stopInPlace();
-							animationTick = 0;
+							resetAnimationTick();
 							setAnimationState(0);
 						}else if(r2<=31) {
 							this.stopInPlace();
-							animationTick = 0;
+							resetAnimationTick();
 							setAnimationState(14);
 						} else if(r2<=63) {
 							if(this.getTarget()!=null&&this.distanceToSqr(this.getTarget())<=8) {
 								this.stopInPlace();
-								animationTick = 0;
+								resetAnimationTick();
 								setAnimationState(23);
 							}
 						}
@@ -250,38 +269,38 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					break;
 				case 23: //Trash
 					this.stopInPlace();
-					if (animationTick % 6 == 0) {
+					if (getAnimationTick() % 6 == 0) {
 						DamageHitboxEntity h = new DamageHitboxEntity(EntityInit.HITBOX_LARGE.get(), level(),
 								this.position(),
 								(float) this.getAttributeValue(Attributes.ATTACK_DAMAGE), 5);
 						h.setOwner(this);
 						this.level().addFreshEntity(h);
 					}
-					if (animationTick >= 36) {
+					if (getAnimationTick() >= 36) {
 						int r3 = new Random().nextInt(255);
 						if(r3<=63) {
-							animationTick = 0;
+							resetAnimationTick();
 							setAnimationState(0);
 						}
 					}
 					break;
 				case 24: //Barrage
 					this.stopInPlace();
-					if (animationTick == 6||animationTick == 13||animationTick == 19
-							||animationTick == 23||animationTick == 28||animationTick == 34) {
+					if (getAnimationTick() == 6||getAnimationTick() == 13||getAnimationTick() == 19
+							||getAnimationTick() == 23||getAnimationTick() == 28||getAnimationTick() == 34) {
 						this.playSound(SoundEvents.GENERIC_EXPLODE.value());
 						this.rangedAttackSmall();
 
 					}
-					if (animationTick >= 44) {
-						animationTick = 0;
+					if (getAnimationTick() >= 44) {
+						resetAnimationTick();
 						setAnimationState(0);
 					}
 					break;
 			}
 	 }
 
-	 public void rangedAttackSmall(){}
+	public void rangedAttackSmall(){}
 	public void rangedAttackLarge(){
 
 	}
@@ -310,6 +329,19 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 	 
 	 @Override
 	public boolean hurt(DamageSource source, float f) {
+		float damageFinal = f/2;
+		if(getAnimationState()==17||getAnimationState()==24){
+			damageFinal = f/4;
+		}
+		 if(source.is(DamageTypeTags.BYPASSES_ARMOR)){
+			 damageFinal = f;
+		 }
+		if(source.getDirectEntity() instanceof LivingEntity attacker && attacker.getMainHandItem().is(ItemTags.AXES)) {
+			damageFinal = f*1.2f;
+		}
+		if(source.is(DamageTypeTags.IS_FIRE)||source.is(DamageTypeTags.BURN_FROM_STEPPING)||source.is(DamageTypeTags.IS_LIGHTNING)){
+			damageFinal = f*2;
+		}
 		 
 		float width = this.getBbWidth() * 0.5f;
 		float height = this.getBbHeight() * 0.5f;
@@ -328,7 +360,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					off.z, 0.05D);
 			}
 		}
-		return super.hurt(source, f);
+		return super.hurt(source, damageFinal);
 	}
 	 
 	 
@@ -344,7 +376,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 
 	@Nullable
 	protected SoundEvent getDeathSound() {
-	  return SoundEvents.WOOD_BREAK;
+	  return SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR;
 	}
 
 

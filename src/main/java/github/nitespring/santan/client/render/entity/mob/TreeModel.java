@@ -33,12 +33,13 @@ public class TreeModel<T extends Tree> extends GeoModel<T> {
         @Override
         public void setCustomAnimations(T entity, long uniqueID, AnimationState<T> customPredicate) {
             super.setCustomAnimations(entity, uniqueID, customPredicate);
-            GeoBone head = this.getAnimationProcessor().getBone("body_rotation");
-            assert customPredicate != null;
-            EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
-            head.setRotX(0.25f*extraData.headPitch() * ((float) Math.PI / 180F));
-            head.setRotY(0.15f*extraData.netHeadYaw() * ((float) Math.PI / 180F));
-
+            if(entity.getAnimationState()!=12) {
+                GeoBone head = this.getAnimationProcessor().getBone("body_rotation");
+                assert customPredicate != null;
+                EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
+                head.setRotX(0.25f * extraData.headPitch() * ((float) Math.PI / 180F));
+                head.setRotY(0.15f * extraData.netHeadYaw() * ((float) Math.PI / 180F));
+            }
         }
 
     }
