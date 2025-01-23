@@ -25,6 +25,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GreatSnowBall extends AbstractHurtingProjectile {
 
@@ -62,6 +66,10 @@ public class GreatSnowBall extends AbstractHurtingProjectile {
         super.tick();
         Vec3 mov = this.getDeltaMovement().multiply(0.95f,1,0.95f).add(0,-0.1,0);
         setDeltaMovement(mov);
+        if(isInWater()){
+            setDeltaMovement(0,0,0);
+            explode();
+        }
         if(tickCount>=1000){
             this.discard();
         }
@@ -70,6 +78,20 @@ public class GreatSnowBall extends AbstractHurtingProjectile {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(EXPLOSION_TYPE, 0);
     }
+
+    @Override
+    protected @Nullable ParticleOptions getTrailParticle() {
+        return null;
+    }
+
+    @Override
+    public boolean fireImmune() {return true;}
+
+    @Override
+    public boolean displayFireAnimation() {
+        return false;
+    }
+
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
@@ -112,48 +134,77 @@ public class GreatSnowBall extends AbstractHurtingProjectile {
         int x0 = this.blockPosition().getX();
         int y0 = this.blockPosition().getY();
         int z0 = this.blockPosition().getZ();
+        List<BlockPos> overriddenBlocks = new ArrayList<>();
+
 
         for(int i = 0; i<=12; i++) {
             for(int j = 0;  j<=spread; j++) {
-                for(int k = 0; k<=2*spread; k++) {
-                    double a=  Math.PI/12;
+                for(int k = 0; k<=spread; k++) {
+                    double a=  Math.PI/6;
                     double d = j;
                     int xVar = (int) (d*Math.sin(i*a));
-                    float yVar = k-spread;
+                    float yVar = (k-spread)*j;
                     int zVar = (int) (d*Math.cos(i*a));;
                     int x= x0+xVar;
                     int z= z0+zVar;
                     float y = y0+yVar;
 
                     BlockPos blockPos = new BlockPos(x, (int) y,z);
-                    BlockState block = level().getBlockState(blockPos);
-                    if(!this.level().isClientSide()) {
 
-                        if(getExplosionType()==1) {
-                            if (block.is(CustomBlockTags.SNOW_BREAKABLE)) {
-                                level().destroyBlock(blockPos, true, this.getOwner());
-                                level().gameEvent(this, GameEvent.BLOCK_DESTROY, blockPos);
-                            }
-                            if (block.is(BlockTags.AIR)) {
-                                BlockState blockstate1 = Blocks.POWDER_SNOW.defaultBlockState();
-                                level().setBlock(blockPos, blockstate1, 11);
-                                level().gameEvent(this, GameEvent.BLOCK_PLACE, blockPos);
-                            }
-                        }else{
-                            if (block.is(CustomBlockTags.SNOW_BREAKABLE)) {
-                                level().destroyBlock(blockPos, true, this.getOwner());
-                                level().gameEvent(this, GameEvent.BLOCK_DESTROY, blockPos);
-                            }
-                            if (block.is(Blocks.SNOW)) {
-                                SnowLayerBlock snow = (SnowLayerBlock) block.getBlock();
-                                int layers = block.getValue(SnowLayerBlock.LAYERS);
-                                block.setValue(SnowLayerBlock.LAYERS, Math.min(layers + 1, 8));
-                                level().destroyBlock(blockPos, true, this.getOwner());
-                                level().gameEvent(this, GameEvent.BLOCK_DESTROY, blockPos);
-                            } else if (block.is(BlockTags.AIR)) {
-                                BlockState blockstate1 = Blocks.SNOW.defaultBlockState();
-                                level().setBlock(blockPos, blockstate1, 11);
-                                level().gameEvent(this, GameEvent.BLOCK_PLACE, blockPos);
+                    if(!overriddenBlocks.contains(blockPos)) {
+                        overriddenBlocks.add(blockPos);
+                        BlockState block = level().getBlockState(blockPos);
+                        BlockState blockBelow = level().getBlockState(blockPos.below());
+                        if (!this.level().isClientSide()) {
+
+                            if (getExplosionType() == 1) {
+                                if (block.is(CustomBlockTags.SNOW_BREAKABLE_1)) {
+                                    level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_DESTROY, blockPos);
+                                }
+                                if (block.is(Blocks.WATER)) {
+                                    BlockState blockstate1 = Blocks.ICE.defaultBlockState();
+                                    level().setBlock(blockPos, blockstate1, 11);
+                                    //level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_CHANGE, blockPos);
+                                }else if (block.is(BlockTags.AIR) && !blockBelow.is(BlockTags.AIR)) {
+                                    BlockState blockstate1 = Blocks.POWDER_SNOW.defaultBlockState();
+                                    level().setBlock(blockPos, blockstate1, 11);
+                                    level().gameEvent(this, GameEvent.BLOCK_PLACE, blockPos);
+                                }
+                            } else {
+                                if (block.is(CustomBlockTags.SNOW_BREAKABLE)) {
+                                    level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_DESTROY, blockPos);
+                                }
+                                if (block.is(Blocks.SNOW)) {
+                                    SnowLayerBlock snow = (SnowLayerBlock) block.getBlock();
+                                    int layers = block.getValue(SnowLayerBlock.LAYERS);
+                                    BlockState blockstate1 = block.setValue(SnowLayerBlock.LAYERS, Math.min(layers + 1, 8));
+                                    level().setBlock(blockPos, blockstate1, 11);
+                                    //level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_CHANGE, blockPos);
+                                }else if (block.is(Blocks.WATER)) {
+                                    BlockState blockstate1 = Blocks.ICE.defaultBlockState();
+                                    level().setBlock(blockPos, blockstate1, 11);
+                                    //level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_CHANGE, blockPos);
+                                }else if (blockBelow.is(Blocks.WATER)) {
+                                    BlockState blockstate1 = Blocks.ICE.defaultBlockState();
+                                    level().setBlock(blockPos.below(), blockstate1, 11);
+                                    //level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_CHANGE, blockPos);
+                                } else if (blockBelow.is(Blocks.SNOW)) {
+                                    int layers = blockBelow.getValue(SnowLayerBlock.LAYERS);
+                                    BlockState blockstate1 = blockBelow.setValue(SnowLayerBlock.LAYERS, Math.min(layers + 1, 8));
+                                    level().setBlock(blockPos.below(), blockstate1, 11);
+                                    //level().destroyBlock(blockPos, true, this.getOwner());
+                                    level().gameEvent(this, GameEvent.BLOCK_CHANGE, blockPos);
+                                }else if (block.is(BlockTags.AIR) && !blockBelow.is(BlockTags.AIR)) {
+                                    BlockState blockstate1 = Blocks.SNOW.defaultBlockState();
+                                    level().setBlock(blockPos, blockstate1, 11);
+                                    level().gameEvent(this, GameEvent.BLOCK_PLACE, blockPos);
+                                }
                             }
                         }
                     }

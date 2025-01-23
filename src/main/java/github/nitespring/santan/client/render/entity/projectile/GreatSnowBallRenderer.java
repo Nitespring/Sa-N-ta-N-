@@ -1,6 +1,7 @@
 package github.nitespring.santan.client.render.entity.projectile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import github.nitespring.santan.common.entity.projectile.GreatSnowBall;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GreatSnowBallRenderer extends EntityRenderer<Entity> {
+public class GreatSnowBallRenderer extends EntityRenderer<GreatSnowBall> {
 
     private final BlockRenderDispatcher dispatcher;
 
@@ -25,7 +26,7 @@ public class GreatSnowBallRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public void render(Entity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    public void render(GreatSnowBall entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         BlockState blockstate = Blocks.SNOW_BLOCK.defaultBlockState();
         if (blockstate.getRenderShape() == RenderShape.MODEL) {
             Level level = entity.level();
@@ -33,6 +34,9 @@ public class GreatSnowBallRenderer extends EntityRenderer<Entity> {
                 poseStack.pushPose();
                 BlockPos blockpos = BlockPos.containing(entity.getX(), entity.getBoundingBox().maxY, entity.getZ());
                 poseStack.translate(-0.5, 0.0, -0.5);
+                if(entity.getExplosionType()==0){
+                    poseStack.scale(0.4f, 0.4f, 0.4f);
+                }
                 var model = this.dispatcher.getBlockModel(blockstate);
                 for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(1), net.neoforged.neoforge.client.model.data.ModelData.EMPTY))
                     this.dispatcher
@@ -60,7 +64,7 @@ public class GreatSnowBallRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Entity entity) {
+    public ResourceLocation getTextureLocation(GreatSnowBall entity) {
         return null;
     }
 }
