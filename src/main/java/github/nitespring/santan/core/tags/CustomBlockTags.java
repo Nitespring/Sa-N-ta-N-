@@ -9,6 +9,8 @@ import net.minecraft.world.level.block.Block;
 public final class CustomBlockTags {
 
     public static final TagKey<Block> SPAWN_SNOW_ENEMIES = create("spawn_snow_enemies");
+    public static final TagKey<Block> SNOW_BREAKABLE = create("snow_breakable");
+    public static final TagKey<Block> SNOW_BREAKABLE_1 = create("snow_breakable_1");
 
     private CustomBlockTags() {
     }
