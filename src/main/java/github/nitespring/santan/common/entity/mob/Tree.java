@@ -140,7 +140,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 	public void tick() {
 		if(this.getAnimationState()!=0&&!this.isDeadOrDying()) {
 			this.playAnimation();
-		}else{
+		}/*else{
 			if(this.tickCount%5==0) {
 				if (this.getTarget() == null && !this.isAggressive()) {
 					int r = new Random().nextInt(2047);
@@ -149,7 +149,7 @@ public class Tree extends AbstractYuleEntity implements GeoEntity{
 					}
 				}
 			}
-		}
+		}*/
 		super.tick();
 	}
 

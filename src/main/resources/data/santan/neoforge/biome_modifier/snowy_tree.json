@@ -13,7 +13,7 @@
   },
   "spawners": {
     "type": "santan:snowy_tree",
-    "weight": 80,
+    "weight": 50,
     "minCount": 1,
     "maxCount": 2
   }

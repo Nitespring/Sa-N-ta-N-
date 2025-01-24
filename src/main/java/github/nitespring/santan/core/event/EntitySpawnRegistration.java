@@ -35,6 +35,16 @@ public class EntitySpawnRegistration {
 					Types.MOTION_BLOCKING_NO_LEAVES,
             		AbstractYuleEntity::checkSnowMonsterSpawnRules,
 					RegisterSpawnPlacementsEvent.Operation.REPLACE);
+		event.register(EntityInit.TREE.get(),
+				SpawnPlacementTypes.ON_GROUND,
+				Types.MOTION_BLOCKING_NO_LEAVES,
+				AbstractYuleEntity::checkSnowMonsterSpawnRules,
+				RegisterSpawnPlacementsEvent.Operation.REPLACE);
+		event.register(EntityInit.SNOWY_TREE.get(),
+				SpawnPlacementTypes.ON_GROUND,
+				Types.MOTION_BLOCKING_NO_LEAVES,
+				AbstractYuleEntity::checkSnowMonsterSpawnRules,
+				RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }
 	
