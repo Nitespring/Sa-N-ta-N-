@@ -19,7 +19,7 @@ public class SnowyTree extends Tree{
     }
     public static  AttributeSupplier.Builder setCustomAttributes(){
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 30.0D)
+                .add(Attributes.MAX_HEALTH, 24.0D)
                 .add(Attributes.ARMOR, 12.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.18D)
@@ -85,6 +85,23 @@ public class SnowyTree extends Tree{
         snowball.setOwner(this);
         snowball.setExplosionType(1);
         level.addFreshEntity(snowball);
+
+        for(int i=0; i<=2; i++) {
+            float rOx = r.nextFloat(-1, 1);
+            float rOy = r.nextFloat(-1, 1);
+            float rV = r.nextFloat(-1, 1);
+            float rPws = r.nextFloat(0, 1);
+            Vec3 aimFs = aimF.add(angleMax * rOx,angleMax * rV,angleMax * rOy).normalize();
+
+            GreatSnowBall snowballi = new GreatSnowBall(EntityInit.SNOWBALL.get(), level);
+            snowballi.setPos(pos0.x + 0.1 * aimFs.x(), pos0.y + 2.0f, pos0.z + 0.1 * aimFs.z());
+            snowballi.setDeltaMovement(aimF.scale(0.5f + 0.5f * rPws+ 0.25*d0));
+            snowballi.setExplosionRadius(1.5f);
+            snowballi.setAttackDamage(5.0f);
+            snowballi.setOwner(this);
+            snowballi.setExplosionType(0);
+            level.addFreshEntity(snowballi);
+        }
 
     }
 }

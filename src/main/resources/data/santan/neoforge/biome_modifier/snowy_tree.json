@@ -12,9 +12,9 @@
     ]
   },
   "spawners": {
-    "type": "santan:elf",
-    "weight": 100,
-    "minCount": 2,
-    "maxCount": 5
+    "type": "santan:snowy_tree",
+    "weight": 80,
+    "minCount": 1,
+    "maxCount": 2
   }
 }

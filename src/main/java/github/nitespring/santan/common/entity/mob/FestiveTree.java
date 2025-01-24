@@ -28,7 +28,7 @@ public class FestiveTree extends Tree{
     }
     public static  AttributeSupplier.Builder setCustomAttributes(){
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 24.0D)
+                .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ARMOR, 10.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.18D)

@@ -120,7 +120,7 @@ public class GreatSnowBall extends AbstractHurtingProjectile {
     private void explode() {
         playSound(SoundEvents.SNOW_PLACE);
         for(LivingEntity livingentity : level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(explosionRadius, explosionRadius, explosionRadius))) {
-            if(((livingentity instanceof Player ||livingentity!=this.getOwner())&&!(this.getOwner().isAlliedTo(livingentity)))) {
+            if(((livingentity instanceof Player ||livingentity!=this.getOwner())&&!(this.getOwner()!=null&&this.getOwner().isAlliedTo(livingentity)))) {
                 if(livingentity.hurtTime<=0) {
 
                     livingentity.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), this.getAttackDamage());
